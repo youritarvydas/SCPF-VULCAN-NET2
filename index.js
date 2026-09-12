@@ -17,7 +17,8 @@ const PORT = process.env.PORT || 3000
 const CLIENT_ID = process.env.ROBLOX_CLIENT_ID
 const CLIENT_SECRET = process.env.ROBLOX_CLIENT_SECRET
 
-const REDIRECT_URI = `http://localhost:${PORT}/oauth/callback`
+const REDIRECT_URI =
+	"https://scpf-vulcan-net20-production.up.railway.app/oauth/callback"
 
 app.use(express.static("public"))
 app.use(express.json())
@@ -269,6 +270,6 @@ app.get("/logout", (req, res) => {
 })
 
 app.listen(PORT, () => {
-	console.log(`Server running at https://discordtoroblox.youritarvydas.workers.dev`)
+	console.log(`Server running on port ${PORT}`)
 	console.log(`OAuth callback: ${REDIRECT_URI}`)
 })
