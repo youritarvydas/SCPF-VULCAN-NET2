@@ -386,14 +386,22 @@ app.get("/api/roblox/:playerId/discord", async (req, res) => {
 		})
 	}
 })
+const API_KEY = process.env.ROBLOX_API_KEY
+
 app.post("/api/roblox/:playerId/send", async (req, res) => {
+	if (req.headers["x-api-key"] !== API_KEY) {
+		return res.status(401).json({
+			error: "Invalid API key."
+		})
+	}
+
 	try {
 		const playerId = req.params.playerId
-		const message = req.body.message
+		const { content, embed } = req.body
 
-		if (!message) {
+		if (!content && !embed) {
 			return res.status(400).json({
-				error: "Message is required."
+				error: "Message content or embed is required."
 			})
 		}
 
@@ -405,13 +413,19 @@ app.post("/api/roblox/:playerId/send", async (req, res) => {
 			})
 		}
 
-		console.log(
-			`Sending Discord DM for Roblox ${playerId} to Discord ${account.discord.id}`
-		)
+		const discordMessage = {}
+
+		if (content) {
+			discordMessage.content = content
+		}
+
+		if (embed) {
+			discordMessage.embeds = [embed]
+		}
 
 		await sendDirectMessage(
 			account.discord.id,
-			message
+			discordMessage
 		)
 
 		res.json({
