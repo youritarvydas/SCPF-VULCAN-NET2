@@ -1,15 +1,14 @@
 
 require("dotenv").config()
 
-const express = require("express")
+const path = require("path")
 const crypto = require("crypto")
+const express = require("express")
 const session = require("express-session")
 const pgSession = require("connect-pg-simple")(session)
 const { Pool } = require("pg")
 
 const discordConnect = require("./DiscordConnect")
-const discordBot = require("./Discordbot")
-const { sendDirectMessage } = discordBot
 
 const {
 	linkAccounts,
@@ -20,67 +19,44 @@ const app = express()
 
 const PORT = process.env.PORT || 3000
 
-const CLIENT_ID = process.env.ROBLOX_CLIENT_ID
-const CLIENT_SECRET = process.env.ROBLOX_CLIENT_SECRET
-
-const REDIRECT_URI =
-	"https://scpf-vulcan-net20-production.up.railway.app/oauth/callback"
+const ROBLOX_CLIENT_ID = process.env.ROBLOX_CLIENT_ID
+const ROBLOX_CLIENT_SECRET = process.env.ROBLOX_CLIENT_SECRET
 
 const SESSION_SECRET = process.env.SESSION_SECRET
 const DATABASE_URL = process.env.DATABASE_URL
 
+const ROBLOX_REDIRECT_URI =
+	"https://scpf-vulcan-net20-production.up.railway.app/oauth/callback"
+
+if (!ROBLOX_CLIENT_ID) {
+	throw new Error("ROBLOX_CLIENT_ID is not configured.")
+}
+
+if (!ROBLOX_CLIENT_SECRET) {
+	throw new Error("ROBLOX_CLIENT_SECRET is not configured.")
+}
+
 if (!SESSION_SECRET) {
-	throw new Error("SESSION_SECRET is not configured in Railway.")
+	throw new Error("SESSION_SECRET is not configured.")
 }
 
 if (!DATABASE_URL) {
-	throw new Error("DATABASE_URL is not configured in Railway.")
+	throw new Error("DATABASE_URL is not configured.")
 }
-
-/*
-|--------------------------------------------------------------------------
-| PostgreSQL
-|--------------------------------------------------------------------------
-*/
-
-const pool = new Pool({
-	connectionString: DATABASE_URL,
-	ssl: {
-		rejectUnauthorized: false
-	}
-})
-
-pool.on("error", (error) => {
-	console.error("PostgreSQL pool error:", error)
-})
-
-/*
-|--------------------------------------------------------------------------
-| Express
-|--------------------------------------------------------------------------
-*/
 
 app.set("trust proxy", 1)
 
-app.use(express.static("public"))
 app.use(express.json())
-app.get("/", (req, res) => {
-	if (req.session.roblox || req.session.discord) {
-		return res.redirect("/Dashboard.html")
-	}
-
-	res.sendFile(path.join(__dirname, "public", "index.html"))
-})
-/*
-|--------------------------------------------------------------------------
-| Sessions
-|--------------------------------------------------------------------------
-*/
 
 app.use(
 	session({
 		store: new pgSession({
-			pool: pool,
+			pool: new Pool({
+				connectionString: DATABASE_URL,
+				ssl: {
+					rejectUnauthorized: false
+				}
+			}),
 			tableName: "user_sessions",
 			createTableIfMissing: true
 		}),
@@ -97,48 +73,51 @@ app.use(
 			httpOnly: true,
 			secure: true,
 			sameSite: "lax",
-			maxAge: 1000 * 60 * 60
+			maxAge: 1000 * 60 * 60 * 24 * 7
 		}
 	})
 )
 
-/*
-|--------------------------------------------------------------------------
-| Discord
-|--------------------------------------------------------------------------
-*/
-
 app.use(discordConnect)
 
-console.log("Database initialized.")
+app.get("/", (req, res) => {
+	if (req.session.roblox || req.session.discord) {
+		return res.redirect("/Dashboard.html")
+	}
 
-/*
-|--------------------------------------------------------------------------
-| Roblox OAuth Login
-|--------------------------------------------------------------------------
-*/
+	res.sendFile(
+		path.join(__dirname, "public", "index.html")
+	)
+})
+
+app.use(express.static(path.join(__dirname, "public")))
 
 app.get("/login/roblox", (req, res) => {
 	const state = crypto.randomBytes(32).toString("hex")
 
 	req.session.oauthState = state
 
+	console.log("Roblox OAuth state created:", state)
+	console.log("Session ID:", req.sessionID)
+
 	req.session.save((err) => {
 		if (err) {
-			console.error("Failed to save OAuth session:", err)
+			console.error(
+				"Failed to save Roblox OAuth session:",
+				err
+			)
+
 			return res
 				.status(500)
 				.send("Failed to initialize OAuth session.")
 		}
 
-		console.log("Roblox OAuth state created:", state)
-
 		const params = new URLSearchParams({
-			client_id: CLIENT_ID,
-			redirect_uri: REDIRECT_URI,
+			client_id: ROBLOX_CLIENT_ID,
+			redirect_uri: ROBLOX_REDIRECT_URI,
 			scope: "openid profile",
 			response_type: "code",
-			state: state
+			state
 		})
 
 		const authorizationUrl =
@@ -147,12 +126,6 @@ app.get("/login/roblox", (req, res) => {
 		res.redirect(authorizationUrl)
 	})
 })
-
-/*
-|--------------------------------------------------------------------------
-| Roblox OAuth Callback
-|--------------------------------------------------------------------------
-*/
 
 app.get("/oauth/callback", async (req, res) => {
 	const {
@@ -164,58 +137,58 @@ app.get("/oauth/callback", async (req, res) => {
 
 	if (error) {
 		return res.status(400).send(`
-			<h1>OAuth Error</h1>
+			<h1>Roblox OAuth Error</h1>
 			<p>${error}</p>
 			<p>${error_description || ""}</p>
 		`)
 	}
 
 	if (!code) {
-		return res.status(400).send("Missing authorization code.")
+		return res
+			.status(400)
+			.send("Missing authorization code.")
 	}
 
 	if (!state) {
-		return res.status(400).send("Missing OAuth state.")
+		return res
+			.status(400)
+			.send("Missing OAuth state.")
 	}
 
-	console.log("OAuth callback received.")
+	console.log("Roblox OAuth callback received.")
 	console.log("Received state:", state)
 	console.log("Session ID:", req.sessionID)
 	console.log("Session state:", req.session.oauthState)
 
 	if (!req.session.oauthState) {
-		console.error("OAuth state missing from session.")
-
-		return res.status(400).send(
-			"OAuth session expired or was lost."
+		console.error(
+			"Roblox OAuth state missing from session."
 		)
+
+		return res
+			.status(400)
+			.send("OAuth session expired or was lost.")
 	}
 
 	if (state !== req.session.oauthState) {
-		console.error("OAuth state mismatch.")
+		console.error("Roblox OAuth state mismatch.")
 		console.error("Expected:", req.session.oauthState)
 		console.error("Received:", state)
 
-		return res.status(400).send(
-			"Invalid OAuth state."
-		)
+		return res
+			.status(400)
+			.send("Invalid OAuth state.")
 	}
 
 	delete req.session.oauthState
 
 	try {
-		/*
-		|--------------------------------------------------------------------------
-		| Exchange authorization code for tokens
-		|--------------------------------------------------------------------------
-		*/
-
-		const body = new URLSearchParams({
-			client_id: CLIENT_ID,
-			client_secret: CLIENT_SECRET,
+		const tokenBody = new URLSearchParams({
+			client_id: ROBLOX_CLIENT_ID,
+			client_secret: ROBLOX_CLIENT_SECRET,
 			grant_type: "authorization_code",
-			code: code,
-			redirect_uri: REDIRECT_URI
+			code,
+			redirect_uri: ROBLOX_REDIRECT_URI
 		})
 
 		const tokenResponse = await fetch(
@@ -228,7 +201,7 @@ app.get("/oauth/callback", async (req, res) => {
 						"application/x-www-form-urlencoded"
 				},
 
-				body: body.toString()
+				body: tokenBody.toString()
 			}
 		)
 
@@ -242,12 +215,6 @@ app.get("/oauth/callback", async (req, res) => {
 
 			return res.status(400).json(tokens)
 		}
-
-		/*
-		|--------------------------------------------------------------------------
-		| Get Roblox user information
-		|--------------------------------------------------------------------------
-		*/
 
 		const userResponse = await fetch(
 			"https://apis.roblox.com/oauth/v1/userinfo",
@@ -272,40 +239,28 @@ app.get("/oauth/callback", async (req, res) => {
 
 		console.log("Roblox user:", user)
 
-		/*
-		|--------------------------------------------------------------------------
-		| Save Roblox account to session
-		|--------------------------------------------------------------------------
-		*/
-
 		req.session.roblox = {
 			id: user.sub,
-			username: user.preferred_username,
-			displayName: user.name,
-			avatar: user.picture
+			username:
+				user.preferred_username ||
+				user.nickname ||
+				user.name,
+			displayName:
+				user.name ||
+				user.nickname ||
+				user.preferred_username,
+			avatar: user.picture || null
 		}
 
-		req.session.accessToken =
+		req.session.robloxAccessToken =
 			tokens.access_token
 
-		/*
-		|--------------------------------------------------------------------------
-		| Link Roblox + Discord
-		|--------------------------------------------------------------------------
-		*/
-
 		if (req.session.discord) {
-			linkAccounts(
+			await linkAccounts(
 				req.session.roblox,
 				req.session.discord
 			)
 		}
-
-		/*
-		|--------------------------------------------------------------------------
-		| Save session
-		|--------------------------------------------------------------------------
-		*/
 
 		req.session.save((err) => {
 			if (err) {
@@ -316,235 +271,78 @@ app.get("/oauth/callback", async (req, res) => {
 
 				return res
 					.status(500)
-					.send(
-						"Failed to save login session."
-					)
+					.send("Failed to save login session.")
 			}
+
+			console.log(
+				"Roblox session saved:",
+				req.sessionID
+			)
 
 			res.redirect("/Dashboard.html")
 		})
 	} catch (error) {
 		console.error(
-			"Roblox OAuth callback error:",
+			"Roblox OAuth error:",
 			error
 		)
 
-		res.status(500).send(
-			"Internal server error."
-		)
+		res
+			.status(500)
+			.send("Internal server error.")
 	}
 })
 
-/*
-|--------------------------------------------------------------------------
-| Current Account
-|--------------------------------------------------------------------------
-*/
+app.get("/api/account", async (req, res) => {
+	console.log(
+		"API account request. Session ID:",
+		req.sessionID
+	)
 
-app.get("/api/account", (req, res) => {
-	if (
-		!req.session.roblox &&
-		!req.session.discord
-	) {
+	console.log(
+		"Session:",
+		req.session
+	)
+
+	if (!req.session.roblox && !req.session.discord) {
 		return res.status(401).json({
-			loggedIn: false
+			loggedIn: false,
+			roblox: null,
+			discord: null
 		})
+	}
+
+	let discord = req.session.discord || null
+	let roblox = req.session.roblox || null
+
+	if (roblox) {
+		try {
+			const linkedAccount =
+				await getLinkByRobloxId(roblox.id)
+
+			if (linkedAccount) {
+				if (!discord && linkedAccount.discord) {
+					discord = linkedAccount.discord
+				}
+
+				if (!roblox && linkedAccount.roblox) {
+					roblox = linkedAccount.roblox
+				}
+			}
+		} catch (error) {
+			console.error(
+				"Failed to retrieve linked account:",
+				error
+			)
+		}
 	}
 
 	res.json({
 		loggedIn: true,
-		roblox: req.session.roblox || null,
-		discord: req.session.discord || null
+		roblox,
+		discord
 	})
 })
-
-/*
-|--------------------------------------------------------------------------
-| Roblox -> Discord Lookup
-|--------------------------------------------------------------------------
-*/
-
-app.get(
-	"/api/roblox/:playerId/discord",
-	(req, res) => {
-		const link =
-			getLinkByRobloxId(
-				req.params.playerId
-			)
-
-		if (!link) {
-			return res.status(404).json({
-				error:
-					"No Discord account is linked to this Roblox player."
-			})
-		}
-
-		res.json({
-			robloxId: link.roblox_id,
-			discordId: link.discord_id,
-			discordUsername:
-				link.discord_username,
-			linkedAt: link.linked_at
-		})
-	}
-)
-
-/*
-|--------------------------------------------------------------------------
-| Roblox -> Discord DM
-|--------------------------------------------------------------------------
-*/
-
-app.post(
-	"/api/roblox/:playerId/send",
-	async (req, res) => {
-		const configuredApiKey =
-			process.env.ROBLOX_API_KEY
-
-		const providedApiKey =
-			req.get("x-api-key")
-
-		if (!configuredApiKey) {
-			return res.status(503).json({
-				error:
-					"ROBLOX_API_KEY is not configured."
-			})
-		}
-
-		if (
-			!providedApiKey ||
-			providedApiKey !== configuredApiKey
-		) {
-			return res.status(401).json({
-				error: "Invalid API key."
-			})
-		}
-
-		if (!discordBot.isReady()) {
-			return res.status(503).json({
-				error:
-					"Discord bot is not ready."
-			})
-		}
-
-		const link =
-			getLinkByRobloxId(
-				req.params.playerId
-			)
-
-		const content =
-			req.body &&
-			req.body.content
-
-		const embed =
-			req.body &&
-			req.body.embed
-
-		if (!link) {
-			return res.status(404).json({
-				error:
-					"No Discord account is linked to this Roblox player."
-			})
-		}
-
-		if (
-			content !== undefined &&
-			(
-				typeof content !== "string" ||
-				content.length > 2000
-			)
-		) {
-			return res.status(400).json({
-				error:
-					"Content must be a string of 2000 characters or less."
-			})
-		}
-
-		if (
-			embed &&
-			(
-				typeof embed !== "object" ||
-				Array.isArray(embed)
-			)
-		) {
-			return res.status(400).json({
-				error:
-					"embed must be a JSON object."
-			})
-		}
-
-		if (
-			(!content ||
-				content.length === 0) &&
-			!embed
-		) {
-			return res.status(400).json({
-				error:
-					"Send content, an embed, or both."
-			})
-		}
-
-		if (
-			embed &&
-			JSON.stringify(embed).length > 6000
-		) {
-			return res.status(400).json({
-				error:
-					"The embed is too large."
-			})
-		}
-
-		try {
-			await sendDirectMessage(
-				link.discord_id,
-				{
-					...(content
-						? { content }
-						: {}),
-
-					...(embed
-						? { embeds: [embed] }
-						: {})
-				}
-			)
-
-			res.json({
-				sent: true,
-				robloxId: link.roblox_id,
-				discordId: link.discord_id
-			})
-		} catch (error) {
-			console.error(
-				"Failed to send Discord message:",
-				error
-			)
-
-			if (error.code === 50007) {
-				return res.status(409).json({
-					error:
-						"Discord cannot DM this user because the bot has no mutual server with them.",
-
-					discordCode:
-						error.code,
-
-					nextStep:
-						"Invite this bot account to the server where the Discord user is a member."
-				})
-			}
-
-			res.status(502).json({
-				error:
-					"Discord message could not be sent."
-			})
-		}
-	}
-)
-
-/*
-|--------------------------------------------------------------------------
-| Logout
-|--------------------------------------------------------------------------
-*/
 
 app.get("/logout", (req, res) => {
 	req.session.destroy((err) => {
@@ -553,6 +351,10 @@ app.get("/logout", (req, res) => {
 				"Failed to destroy session:",
 				err
 			)
+
+			return res
+				.status(500)
+				.send("Failed to log out.")
 		}
 
 		res.clearCookie("spas.sid")
@@ -561,19 +363,33 @@ app.get("/logout", (req, res) => {
 	})
 })
 
-/*
-|--------------------------------------------------------------------------
-| Start Server
-|--------------------------------------------------------------------------
-*/
+app.get("/api/roblox/:playerId/discord", async (req, res) => {
+	try {
+		const account =
+			await getLinkByRobloxId(req.params.playerId)
+
+		if (!account || !account.discord) {
+			return res.status(404).json({
+				linked: false
+			})
+		}
+
+		res.json({
+			linked: true,
+			discord: account.discord
+		})
+	} catch (error) {
+		console.error(error)
+
+		res.status(500).json({
+			error: "Internal server error."
+		})
+	}
+})
 
 app.listen(PORT, () => {
 	console.log(
-		`Server running at https://scpf-vulcan-net20-production.up.railway.app/`
-	)
-
-	console.log(
-		`OAuth callback: ${REDIRECT_URI}`
+		`SCPF Vulcan Net running on port ${PORT}`
 	)
 })
 
