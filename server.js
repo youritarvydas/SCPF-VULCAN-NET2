@@ -386,6 +386,45 @@ app.get("/api/roblox/:playerId/discord", async (req, res) => {
 		})
 	}
 })
+app.post("/api/roblox/:playerId/send", async (req, res) => {
+	try {
+		const playerId = req.params.playerId
+		const message = req.body.message
+
+		if (!message) {
+			return res.status(400).json({
+				error: "Message is required."
+			})
+		}
+
+		const account = await getLinkByRobloxId(playerId)
+
+		if (!account || !account.discord) {
+			return res.status(404).json({
+				error: "No Discord account linked to this Roblox account."
+			})
+		}
+
+		console.log(
+			`Sending Discord DM for Roblox ${playerId} to Discord ${account.discord.id}`
+		)
+
+		await sendDirectMessage(
+			account.discord.id,
+			message
+		)
+
+		res.json({
+			success: true
+		})
+	} catch (error) {
+		console.error("Discord API failed:", error)
+
+		res.status(500).json({
+			error: error.message || "Failed to send Discord message."
+		})
+	}
+})
 
 app.listen(PORT, () => {
 	console.log(
