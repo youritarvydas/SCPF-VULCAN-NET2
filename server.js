@@ -64,7 +64,13 @@ app.set("trust proxy", 1)
 
 app.use(express.static("public"))
 app.use(express.json())
+app.get("/", (req, res) => {
+	if (req.session.roblox || req.session.discord) {
+		return res.redirect("/Dashboard.html")
+	}
 
+	res.sendFile(path.join(__dirname, "public", "index.html"))
+})
 /*
 |--------------------------------------------------------------------------
 | Sessions
