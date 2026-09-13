@@ -9,6 +9,8 @@ const pgSession = require("connect-pg-simple")(session)
 const { Pool } = require("pg")
 
 const discordConnect = require("./DiscordConnect")
+const discordBot = require("./Discordbot")
+const { sendDirectMessage } = discordBot
 
 const {
 	linkAccounts,
