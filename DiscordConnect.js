@@ -9,7 +9,7 @@ const CLIENT_ID = process.env.DISCORD_CLIENT_ID
 const CLIENT_SECRET =
 	process.env.DISCORD_CLIENT_SECRET || process.env.DISCORD_SECRET_ID
 const REDIRECT_URI =
-	` http://localhost:${PORT}/oauth/discord/callback`
+	`https://scpf-vulcan-net20-production.up.railway.app/oauth/discord/callback`
 
 router.get("/login/discord", (req, res) => {
 	const state = crypto.randomBytes(32).toString("hex")
