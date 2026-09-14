@@ -21,6 +21,7 @@ const app = express()
 
 const PORT = process.env.PORT || 3000
 
+const ROBLOX_GROUP_API_KEY = process.env.ROBLOX_GROUP_API_KEY
 const ROBLOX_CLIENT_ID = process.env.ROBLOX_CLIENT_ID
 const ROBLOX_CLIENT_SECRET = process.env.ROBLOX_CLIENT_SECRET
 
@@ -438,6 +439,68 @@ app.post("/api/roblox/:playerId/send", async (req, res) => {
 
 		res.status(500).json({
 			error: error.message || "Failed to send Discord message."
+		})
+	}
+})
+
+app.get("/api/roblox/:userId/groups/:groupId/role", async (req, res) => {
+	if (req.headers["x-api-key"] !== ROBLOX_GROUP_API_KEY) {
+		return res.status(401).json({
+			error: "Invalid API key."
+		})
+	}
+
+	try {
+		const userId = req.params.userId
+		const groupId = req.params.groupId
+
+		const response = await fetch(
+			`https://groups.roblox.com/v1/users/${userId}/groups/roles`
+		)
+
+		const data = await response.json()
+
+		if (!response.ok) {
+			console.error("Roblox Groups API error:", data)
+
+			return res.status(response.status).json({
+				error: "Failed to retrieve Roblox group roles.",
+				details: data
+			})
+		}
+
+		const group = data.data.find(
+			entry => String(entry.group.id) === String(groupId)
+		)
+
+		if (!group) {
+			return res.status(404).json({
+				found: false,
+				userId,
+				groupId,
+				role: null
+			})
+		}
+
+		res.json({
+			found: true,
+			userId,
+			groupId,
+			group: {
+				id: group.group.id,
+				name: group.group.name
+			},
+			role: {
+				id: group.role.id,
+				name: group.role.name,
+				rank: group.role.rank
+			}
+		})
+	} catch (error) {
+		console.error("Roblox Groups API failed:", error)
+
+		res.status(500).json({
+			error: "Internal server error."
 		})
 	}
 })
