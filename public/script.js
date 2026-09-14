@@ -173,7 +173,14 @@ function updateAccounts() {
 			accountData.groupRole
 				? accountData.groupRole.name
 				: "Not in group"
-
+		document.getElementById("headerRank_CLEARANCE").textContent =
+			accountData.groupRole
+				? accountData.groupRole.name
+				: "Not in group"
+		document.getElementById("headerRank_ACCESS").textContent =
+			accountData.groupRole
+				? accountData.groupRole.name
+				: "Not in group"
 		const headerAvatar =
 			document.getElementById("headerAvatar")
 
