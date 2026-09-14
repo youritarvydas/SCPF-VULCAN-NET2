@@ -1,7 +1,9 @@
 let accountData = {
 	roblox: null,
 	discord: null,
-	groupRole: null
+	groupRole: null,
+	lastLogin: null,
+	currentLogin: null
 }
 
 const GROUP_ID = 14825724
@@ -162,6 +164,17 @@ function updateAccounts() {
 		icon.textContent = "×"
 	}
 
+	const lastLogin = document.getElementById("lastLogin")
+
+if (lastLogin) {
+	if (accountData.lastLogin) {
+		lastLogin.textContent =
+			new Date(accountData.lastLogin).toLocaleString()
+	} else {
+		lastLogin.textContent = "Never"
+	}
+}
+
 	if (accountData.roblox) {
 		document.getElementById("headerUsername").textContent =
 			accountData.roblox.username
@@ -215,6 +228,9 @@ async function loadAccount() {
 
 		accountData.roblox = data.roblox
 		accountData.discord = data.discord
+		accountData.groupRole = data.groupRole
+		accountData.lastLogin = data.lastLogin
+		accountData.currentLogin = data.currentLogin
 
 		await loadGroupRole()
 
