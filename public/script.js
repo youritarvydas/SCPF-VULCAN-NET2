@@ -1,7 +1,10 @@
 let accountData = {
 	roblox: null,
-	discord: null
+	discord: null,
+	groupRole: null
 }
+
+const GROUP_ID = 14825724
 
 function setAvatar(element, account, fallback, type, loginUrl) {
 	element.innerHTML = ""
@@ -44,6 +47,39 @@ function setAvatar(element, account, fallback, type, loginUrl) {
 		element.onclick = function () {
 			window.location.href = loginUrl
 		}
+	}
+}
+
+async function loadGroupRole() {
+	if (!accountData.roblox) {
+		accountData.groupRole = null
+		return
+	}
+
+	try {
+		const response = await fetch(
+			`/api/roblox/${accountData.roblox.id}/groups/${GROUP_ID}/role`
+		)
+
+		if (!response.ok) {
+			accountData.groupRole = null
+			return
+		}
+
+		const data = await response.json()
+
+		if (data.found && data.role) {
+			accountData.groupRole = data.role
+		} else {
+			accountData.groupRole = null
+		}
+	} catch (error) {
+		console.error(
+			"Failed to load Roblox group role:",
+			error
+		)
+
+		accountData.groupRole = null
 	}
 }
 
@@ -134,7 +170,9 @@ function updateAccounts() {
 			`Welcome back, ${accountData.roblox.username}.`
 
 		document.getElementById("headerRank").textContent =
-			"Foundation Personnel"
+			accountData.groupRole
+				? accountData.groupRole.name
+				: "Not in group"
 
 		const headerAvatar =
 			document.getElementById("headerAvatar")
@@ -171,6 +209,8 @@ async function loadAccount() {
 		accountData.roblox = data.roblox
 		accountData.discord = data.discord
 
+		await loadGroupRole()
+
 		updateAccounts()
 	} catch (error) {
 		console.error("Failed to load account:", error)
@@ -182,3 +222,4 @@ function logout() {
 }
 
 loadAccount()
+
