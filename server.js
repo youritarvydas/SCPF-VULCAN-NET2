@@ -93,6 +93,18 @@ app.get("/", (req, res) => {
 	)
 })
 
+
+function updateLoginTime(req) {
+	if (!req.session.currentLogin) {
+		req.session.lastLogin = req.session.previousLogin || null
+		req.session.currentLogin = new Date().toISOString()
+		req.session.previousLogin = req.session.currentLogin
+
+		return true
+	}
+
+	return false
+}
 app.use(express.static(path.join(__dirname, "public")))
 
 app.get("/login/roblox", (req, res) => {
@@ -311,7 +323,8 @@ app.get("/api/account", async (req, res) => {
 		return res.status(401).json({
 			loggedIn: false,
 			roblox: null,
-			discord: null
+			discord: null,
+			lastLogin: null
 		})
 	}
 
@@ -340,13 +353,41 @@ app.get("/api/account", async (req, res) => {
 		}
 	}
 
+	const loginUpdated = updateLoginTime(req)
+
+	if (loginUpdated) {
+		console.log(
+			"[LOGIN] New dashboard session detected."
+		)
+
+		console.log(
+			"[LOGIN] Previous login:",
+			req.session.lastLogin || "None"
+		)
+
+		console.log(
+			"[LOGIN] Current login:",
+			req.session.currentLogin
+		)
+
+		req.session.save((err) => {
+			if (err) {
+				console.error(
+					"[LOGIN] Failed to save login time:",
+					err
+				)
+			}
+		})
+	}
+
 	res.json({
 		loggedIn: true,
 		roblox,
-		discord
+		discord,
+		lastLogin: req.session.lastLogin,
+		currentLogin: req.session.currentLogin
 	})
 })
-
 app.get("/logout", (req, res) => {
 	req.session.destroy((err) => {
 		if (err) {
