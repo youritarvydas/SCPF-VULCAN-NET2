@@ -1,0 +1,1273 @@
+:root {
+    --bg: #080b10;
+    --sidebar: #0b0f15;
+    --panel: #0d1219;
+    --panel-hover: #111820;
+
+    --border: #202832;
+    --border-light: #2a333e;
+
+    --text: #e7ebef;
+    --muted: #7f8a97;
+
+    --blue: #4d9cff;
+    --green: #48d597;
+    --orange: #e5a451;
+    --red: #e05d67;
+    --purple: #9b7cff;
+}
+
+
+* {
+    box-sizing: border-box;
+}
+
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+
+    width: 100%;
+    min-height: 100%;
+
+    background: var(--bg);
+    color: var(--text);
+
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+}
+
+
+body {
+    min-height: 100vh;
+}
+
+
+button,
+select {
+    font-family: inherit;
+}
+
+
+button {
+    cursor: pointer;
+}
+
+
+/* =========================
+   DASHBOARD
+========================= */
+
+.Dashboard {
+    display: flex;
+
+    min-height: 100vh;
+    width: 100%;
+}
+
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.Sidebar {
+    width: 245px;
+    min-width: 245px;
+
+    display: flex;
+    flex-direction: column;
+
+    background: var(--sidebar);
+
+    border-right: 1px solid var(--border);
+
+    padding: 24px 14px;
+}
+
+
+.Logo {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 4px 12px 28px;
+}
+
+
+.LogoIcon {
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid var(--border-light);
+
+    background: #10161e;
+
+    color: var(--blue);
+
+    font-size: 18px;
+}
+
+
+.Logo strong {
+    display: block;
+
+    font-size: 15px;
+    letter-spacing: 1.5px;
+}
+
+
+.Logo span {
+    display: block;
+
+    margin-top: 3px;
+
+    color: var(--muted);
+
+    font-size: 9px;
+    letter-spacing: 1.5px;
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+.Sidebar nav {
+    display: flex;
+    flex-direction: column;
+
+    gap: 5px;
+}
+
+
+.NavItem {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+    gap: 13px;
+
+    height: 43px;
+
+    padding: 0 13px;
+
+    color: var(--muted);
+
+    text-decoration: none;
+
+    font-size: 13px;
+
+    border: 1px solid transparent;
+
+    transition:
+        background 0.15s ease,
+        color 0.15s ease,
+        border 0.15s ease;
+}
+
+
+.NavItem span {
+    width: 18px;
+
+    text-align: center;
+
+    font-size: 15px;
+}
+
+
+.NavItem:hover {
+    color: var(--text);
+
+    background: #10161d;
+
+    border-color: var(--border);
+}
+
+
+.NavItem.active {
+    color: var(--text);
+
+    background: #111923;
+
+    border-color: var(--border-light);
+}
+
+
+.NavItem.active::before {
+    content: "";
+
+    position: absolute;
+
+    left: -1px;
+    top: 8px;
+    bottom: 8px;
+
+    width: 2px;
+
+    background: var(--blue);
+}
+
+
+/* =========================
+   SIDEBAR BOTTOM
+========================= */
+
+.SidebarBottom {
+    margin-top: auto;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 14px;
+}
+
+
+.SystemStatus {
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+    padding: 0 12px;
+
+    color: var(--muted);
+
+    font-size: 9px;
+    letter-spacing: 1px;
+}
+
+
+.SystemStatus span {
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: var(--green);
+
+    box-shadow: 0 0 8px rgba(72, 213, 151, 0.45);
+}
+
+
+.Logout {
+    width: 100%;
+    height: 40px;
+
+    background: transparent;
+
+    border: 1px solid var(--border);
+
+    color: var(--muted);
+
+    font-size: 12px;
+
+    transition: 0.15s ease;
+}
+
+
+.Logout:hover {
+    background: #11161d;
+
+    border-color: var(--border-light);
+
+    color: var(--text);
+}
+
+
+/* =========================
+   MAIN
+========================= */
+
+.Main {
+    flex: 1;
+
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    background: var(--bg);
+}
+
+
+.TopBar {
+    height: 91px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 36px;
+
+    border-bottom: 1px solid var(--border);
+
+    background: #090d12;
+}
+
+
+.SectionLabel {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: var(--blue);
+
+    font-size: 9px;
+    font-weight: 600;
+
+    letter-spacing: 1.7px;
+}
+
+
+.TopBar h1 {
+    margin: 0;
+
+    font-size: 25px;
+    font-weight: 500;
+
+    letter-spacing: -0.5px;
+}
+
+
+.Account {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+}
+
+
+.AccountText {
+    text-align: right;
+}
+
+
+.AccountText strong {
+    display: block;
+
+    font-size: 12px;
+    font-weight: 600;
+}
+
+
+.AccountText span {
+    display: block;
+
+    margin-top: 3px;
+
+    color: var(--muted);
+
+    font-size: 10px;
+}
+
+
+.SmallAvatar {
+    width: 39px;
+    height: 39px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+
+    background: #111821;
+
+    border: 1px solid var(--border-light);
+
+    color: var(--muted);
+}
+
+
+.SmallAvatar img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+
+/* =========================
+   CONTENT
+========================= */
+
+.Content {
+    width: 100%;
+    max-width: 1450px;
+
+    margin: 0 auto;
+
+    padding: 32px 36px 50px;
+}
+
+
+/* =========================
+   WELCOME
+========================= */
+
+.Welcome {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 30px;
+
+    min-height: 155px;
+
+    padding: 28px 30px;
+
+    background:
+        linear-gradient(
+            110deg,
+            #0e151d,
+            #0b1118
+        );
+
+    border: 1px solid var(--border);
+
+    position: relative;
+
+    overflow: hidden;
+}
+
+
+.Welcome::after {
+    content: "";
+
+    position: absolute;
+
+    right: -80px;
+    top: -100px;
+
+    width: 270px;
+    height: 270px;
+
+    border: 1px solid rgba(77, 156, 255, 0.08);
+
+    transform: rotate(45deg);
+}
+
+
+.Welcome h2 {
+    margin: 0 0 9px;
+
+    font-size: 25px;
+    font-weight: 500;
+}
+
+
+.Welcome p {
+    max-width: 650px;
+
+    margin: 0;
+
+    color: var(--muted);
+
+    font-size: 12px;
+
+    line-height: 1.7;
+}
+
+
+.Clearance {
+    position: relative;
+    z-index: 1;
+
+    min-width: 145px;
+
+    padding: 18px 20px;
+
+    border: 1px solid var(--border-light);
+
+    background: #0b1118;
+
+    text-align: center;
+}
+
+
+.Clearance span {
+    display: block;
+
+    color: var(--muted);
+
+    font-size: 8px;
+    letter-spacing: 1.5px;
+}
+
+
+.Clearance strong {
+    display: block;
+
+    margin-top: 6px;
+
+    color: var(--green);
+
+    font-size: 12px;
+
+    letter-spacing: 1px;
+}
+
+
+/* =========================
+   STATS
+========================= */
+
+.Stats {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 12px;
+
+    margin-top: 14px;
+}
+
+
+.StatCard {
+    min-height: 120px;
+
+    padding: 19px 20px;
+
+    background: var(--panel);
+
+    border: 1px solid var(--border);
+
+    transition:
+        background 0.15s ease,
+        border-color 0.15s ease;
+}
+
+
+.StatCard:hover {
+    background: var(--panel-hover);
+
+    border-color: var(--border-light);
+}
+
+
+.StatLabel {
+    display: block;
+
+    color: var(--muted);
+
+    font-size: 8px;
+
+    letter-spacing: 1.5px;
+}
+
+
+.StatCard strong {
+    display: block;
+
+    margin-top: 9px;
+
+    font-size: 27px;
+
+    font-weight: 500;
+}
+
+
+.StatCard small {
+    display: block;
+
+    margin-top: 5px;
+
+    color: var(--muted);
+
+    font-size: 10px;
+}
+
+
+/* =========================
+   PANEL
+========================= */
+
+.Panel {
+    margin-top: 14px;
+
+    background: var(--panel);
+
+    border: 1px solid var(--border);
+}
+
+
+.PanelHeader {
+    min-height: 76px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding: 17px 20px;
+
+    border-bottom: 1px solid var(--border);
+}
+
+
+.PanelHeader h3 {
+    margin: 0;
+
+    font-size: 15px;
+    font-weight: 500;
+}
+
+
+/* =========================
+   CONTROLS
+========================= */
+
+.Controls {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+}
+
+
+#siteFilter {
+    height: 35px;
+
+    min-width: 145px;
+
+    padding: 0 10px;
+
+    color: var(--text);
+
+    background: #090e14;
+
+    border: 1px solid var(--border-light);
+
+    outline: none;
+
+    font-size: 11px;
+}
+
+
+#siteFilter:focus {
+    border-color: var(--blue);
+}
+
+
+.RefreshButton {
+    height: 35px;
+
+    padding: 0 13px;
+
+    background: #111923;
+
+    color: var(--text);
+
+    border: 1px solid var(--border-light);
+
+    font-size: 11px;
+
+    transition: 0.15s ease;
+}
+
+
+.RefreshButton:hover {
+    background: #17212d;
+
+    border-color: var(--blue);
+}
+
+
+.RefreshButton.loading {
+    opacity: 0.6;
+
+    pointer-events: none;
+}
+
+
+/* =========================
+   SERVER LIST
+========================= */
+
+.ServerList {
+    display: flex;
+    flex-direction: column;
+
+    gap: 8px;
+
+    padding: 12px;
+}
+
+
+.ServerCard {
+    display: grid;
+
+    grid-template-columns:
+        minmax(220px, 1.5fr)
+        minmax(300px, 2fr)
+        auto;
+
+    align-items: center;
+
+    gap: 25px;
+
+    padding: 18px;
+
+    background: #0a0f15;
+
+    border: 1px solid var(--border);
+
+    transition:
+        background 0.15s ease,
+        border-color 0.15s ease,
+        transform 0.15s ease;
+}
+
+
+.ServerCard:hover {
+    background: var(--panel-hover);
+
+    border-color: var(--border-light);
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================
+   SERVER IDENTITY
+========================= */
+
+.ServerIdentity {
+    min-width: 0;
+}
+
+
+.ServerTitle {
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+}
+
+
+.ServerTitle h4 {
+    margin: 0;
+
+    font-size: 14px;
+    font-weight: 600;
+}
+
+
+.ServerStatus {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 5px;
+
+    padding: 4px 7px;
+
+    color: var(--green);
+
+    background: rgba(72, 213, 151, 0.07);
+
+    border: 1px solid rgba(72, 213, 151, 0.15);
+
+    font-size: 8px;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.7px;
+}
+
+
+.ServerStatus::before {
+    content: "";
+
+    width: 5px;
+    height: 5px;
+
+    border-radius: 50%;
+
+    background: currentColor;
+}
+
+
+.ServerDescription {
+    margin: 7px 0 0;
+
+    color: var(--muted);
+
+    font-size: 10px;
+
+    line-height: 1.5;
+}
+
+
+.ServerJob {
+    margin-top: 8px;
+
+    color: #596572;
+
+    font-family: monospace;
+
+    font-size: 9px;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+/* =========================
+   SERVER METRICS
+========================= */
+
+.ServerMetrics {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(70px, 1fr));
+
+    gap: 10px;
+}
+
+
+.Metric {
+    min-width: 0;
+
+    padding: 10px 11px;
+
+    background: #0d131a;
+
+    border: 1px solid var(--border);
+}
+
+
+.Metric span {
+    display: block;
+
+    color: var(--muted);
+
+    font-size: 8px;
+
+    letter-spacing: 0.7px;
+
+    text-transform: uppercase;
+}
+
+
+.Metric strong {
+    display: block;
+
+    margin-top: 5px;
+
+    color: var(--text);
+
+    font-size: 12px;
+
+    font-weight: 500;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+/* =========================
+   PLAYER BAR
+========================= */
+
+.PlayerBar {
+    height: 3px;
+
+    margin-top: 7px;
+
+    overflow: hidden;
+
+    background: #18212b;
+}
+
+
+.PlayerBar span {
+    display: block;
+
+    height: 100%;
+
+    background: var(--blue);
+}
+
+
+/* =========================
+   SERVER ACTION
+========================= */
+
+.ServerAction {
+    display: flex;
+
+    justify-content: flex-end;
+}
+
+
+.JoinButton {
+    height: 38px;
+
+    min-width: 95px;
+
+    padding: 0 14px;
+
+    color: #dcecff;
+
+    background: #102033;
+
+    border: 1px solid #25476b;
+
+    font-size: 11px;
+
+    transition: 0.15s ease;
+}
+
+
+.JoinButton:hover {
+    background: #16304a;
+
+    border-color: var(--blue);
+}
+
+
+.JoinButton:disabled {
+    opacity: 0.4;
+
+    cursor: not-allowed;
+}
+
+
+/* =========================
+   LOADING
+========================= */
+
+.Loading {
+    min-height: 150px;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 13px;
+
+    color: var(--muted);
+
+    font-size: 11px;
+}
+
+
+.LoadingSpinner {
+    width: 23px;
+    height: 23px;
+
+    border: 2px solid var(--border-light);
+
+    border-top-color: var(--blue);
+
+    border-radius: 50%;
+
+    animation: spin 0.8s linear infinite;
+}
+
+
+@keyframes spin {
+
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+
+}
+
+
+/* =========================
+   EMPTY / ERROR
+========================= */
+
+.EmptyState,
+.ErrorState {
+    min-height: 150px;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+
+    padding: 25px;
+}
+
+
+.EmptyState strong,
+.ErrorState strong {
+    margin-bottom: 7px;
+
+    font-size: 13px;
+}
+
+
+.EmptyState span,
+.ErrorState span {
+    max-width: 450px;
+
+    color: var(--muted);
+
+    font-size: 10px;
+
+    line-height: 1.6;
+}
+
+
+.ErrorState strong {
+    color: var(--red);
+}
+
+
+/* =========================
+   NETWORK INFORMATION
+========================= */
+
+.InfoGrid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 1px;
+
+    background: var(--border);
+}
+
+
+.InfoItem {
+    display: flex;
+
+    gap: 13px;
+
+    padding: 20px;
+
+    background: var(--panel);
+}
+
+
+.InfoIcon {
+    width: 34px;
+    height: 34px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: var(--blue);
+
+    background: #101821;
+
+    border: 1px solid var(--border-light);
+
+    font-size: 13px;
+}
+
+
+.InfoItem strong {
+    display: block;
+
+    margin-bottom: 5px;
+
+    font-size: 11px;
+}
+
+
+.InfoItem span {
+    display: block;
+
+    color: var(--muted);
+
+    font-size: 9px;
+
+    line-height: 1.6;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+.Footer {
+    margin-top: auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding: 18px 36px;
+
+    border-top: 1px solid var(--border);
+
+    color: #58636f;
+
+    font-size: 9px;
+
+    letter-spacing: 0.4px;
+}
+
+
+.Footer b {
+    color: var(--green);
+
+    font-weight: 500;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 1100px) {
+
+    .ServerCard {
+        grid-template-columns: 1fr;
+    }
+
+    .ServerAction {
+        justify-content: flex-start;
+    }
+
+    .Stats {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .InfoGrid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+@media (max-width: 750px) {
+
+    .Sidebar {
+        width: 70px;
+        min-width: 70px;
+
+        padding: 18px 8px;
+    }
+
+    .Logo {
+        justify-content: center;
+
+        padding: 4px 0 25px;
+    }
+
+    .Logo > div:last-child {
+        display: none;
+    }
+
+    .NavItem {
+        justify-content: center;
+
+        padding: 0;
+    }
+
+    .NavItem span {
+        width: auto;
+    }
+
+    .NavItem {
+        font-size: 0;
+    }
+
+    .SystemStatus {
+        justify-content: center;
+
+        padding: 0;
+    }
+
+    .SystemStatus {
+        font-size: 0;
+    }
+
+    .Logout {
+        font-size: 0;
+    }
+
+    .Logout:first-letter {
+        font-size: 15px;
+    }
+
+    .TopBar {
+        padding: 0 20px;
+    }
+
+    .Content {
+        padding: 20px;
+    }
+
+    .Welcome {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .Stats {
+        grid-template-columns: 1fr;
+    }
+
+    .ServerMetrics {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .Footer {
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        padding: 18px 20px;
+    }
+
+}
+
+
+@media (max-width: 500px) {
+
+    .AccountText {
+        display: none;
+    }
+
+    .PanelHeader {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+    .Controls {
+        width: 100%;
+    }
+
+    #siteFilter {
+        flex: 1;
+    }
+
+}
