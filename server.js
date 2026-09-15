@@ -118,6 +118,183 @@ app.get("/", (req, res) => {
 	)
 })
 
+
+const SERVER_API_KEY = process.env.SERVER_API_KEY || "CHANGE_THIS_API_KEY";
+const SERVER_TIMEOUT = 45 * 1000;
+
+const robloxServers = new Map();
+
+function validateServerKey(req, res, next) {
+	const key = req.headers["x-api-key"];
+
+	if (!key || key !== SERVER_API_KEY) {
+		return res.status(401).json({
+			success: false,
+			error: "Invalid API key"
+		});
+	}
+
+	next();
+}
+
+function cleanServers() {
+	const now = Date.now();
+
+	for (const [jobId, server] of robloxServers.entries()) {
+		if (now - server.lastHeartbeat > SERVER_TIMEOUT) {
+			robloxServers.delete(jobId);
+			console.log(`[Server Registry] Removed inactive server: ${jobId}`);
+		}
+	}
+}
+
+setInterval(cleanServers, 10000);
+
+app.post("/api/servers/register", validateServerKey, (req, res) => {
+	const {
+		jobId,
+		placeId,
+		site,
+		description,
+		players,
+		maxPlayers,
+		region,
+		startedAt
+	} = req.body;
+
+	if (!jobId || !placeId || !site) {
+		return res.status(400).json({
+			success: false,
+			error: "Missing required fields"
+		});
+	}
+
+	const now = Date.now();
+
+	const server = {
+		jobId: String(jobId),
+		placeId: String(placeId),
+		site: String(site),
+		description: description ? String(description) : "",
+		players: Number(players) || 0,
+		maxPlayers: Number(maxPlayers) || 0,
+		region: region ? String(region) : "Unknown",
+		startedAt: Number(startedAt) || Math.floor(now / 1000),
+		lastHeartbeat: now,
+		status: "online"
+	};
+
+	robloxServers.set(server.jobId, server);
+
+	console.log(
+		`[Server Registry] Registered ${server.site} | ${server.jobId} | ${server.players}/${server.maxPlayers}`
+	);
+
+	res.json({
+		success: true,
+		server
+	});
+});
+
+app.post("/api/servers/heartbeat", validateServerKey, (req, res) => {
+	const {
+		jobId,
+		placeId,
+		site,
+		description,
+		players,
+		maxPlayers,
+		region,
+		startedAt
+	} = req.body;
+
+	if (!jobId) {
+		return res.status(400).json({
+			success: false,
+			error: "Missing jobId"
+		});
+	}
+
+	const existingServer = robloxServers.get(String(jobId));
+
+	if (!existingServer) {
+		return res.status(404).json({
+			success: false,
+			error: "Server is not registered"
+		});
+	}
+
+	existingServer.placeId = String(placeId || existingServer.placeId);
+	existingServer.site = String(site || existingServer.site);
+	existingServer.description = String(
+		description || existingServer.description
+	);
+	existingServer.players = Number(players) || 0;
+	existingServer.maxPlayers =
+		Number(maxPlayers) || existingServer.maxPlayers;
+	existingServer.region = String(region || existingServer.region);
+	existingServer.startedAt =
+		Number(startedAt) || existingServer.startedAt;
+	existingServer.lastHeartbeat = Date.now();
+	existingServer.status = "online";
+
+	robloxServers.set(existingServer.jobId, existingServer);
+
+	res.json({
+		success: true,
+		server: existingServer
+	});
+});
+
+app.post("/api/servers/unregister", validateServerKey, (req, res) => {
+	const { jobId } = req.body;
+
+	if (!jobId) {
+		return res.status(400).json({
+			success: false,
+			error: "Missing jobId"
+		});
+	}
+
+	const deleted = robloxServers.delete(String(jobId));
+
+	if (deleted) {
+		console.log(`[Server Registry] Server stopped: ${jobId}`);
+	}
+
+	res.json({
+		success: true,
+		removed: deleted
+	});
+});
+
+app.get("/api/servers", (req, res) => {
+	cleanServers();
+
+	const servers = Array.from(robloxServers.values()).map(server => ({
+		jobId: server.jobId,
+		placeId: server.placeId,
+		site: server.site,
+		description: server.description,
+		players: server.players,
+		maxPlayers: server.maxPlayers,
+		region: server.region,
+		startedAt: server.startedAt,
+		uptime: Math.max(
+			0,
+			Math.floor(Date.now() / 1000) - server.startedAt
+		),
+		status: server.status
+	}));
+
+	res.json({
+		success: true,
+		servers
+	});
+});
+
+
+
 function updateLoginTime(req) {
 	if (!req.session.currentLogin) {
 		req.session.lastLogin =
