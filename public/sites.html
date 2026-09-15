@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SCPF - Sites</title>
+
+    <link rel="stylesheet" href="/sites.css">
+</head>
+
+<body>
+
+<div class="Dashboard">
+
+    <aside class="Sidebar">
+
+        <div class="Logo">
+            <div class="LogoIcon">⚛</div>
+
+            <div>
+                <strong>SCPF</strong>
+                <span>SITE NETWORK</span>
+            </div>
+        </div>
+
+        <nav>
+
+            <a class="NavItem" href="/Dashboard.html">
+                <span>▦</span>
+                Dashboard
+            </a>
+
+            <a class="NavItem" href="#">
+                <span>◉</span>
+                My Profile
+            </a>
+
+            <a class="NavItem" href="#">
+                <span>♟</span>
+                Personnel
+            </a>
+
+            <a class="NavItem active" href="/Sites.html">
+                <span>⌖</span>
+                Sites
+            </a>
+
+            <a class="NavItem" href="#">
+                <span>▤</span>
+                Applications
+            </a>
+
+        </nav>
+
+        <div class="SidebarBottom">
+
+            <div class="SystemStatus">
+                <span></span>
+                SYSTEM ONLINE
+            </div>
+
+            <button onclick="logout()" class="Logout">
+                ↪ Log out
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <main class="Main">
+
+        <header class="TopBar">
+
+            <div>
+                <span class="SectionLabel">
+                    SECURE NETWORK
+                </span>
+
+                <h1>Sites</h1>
+            </div>
+
+
+            <div class="Account">
+
+                <div class="AccountText">
+
+                    <strong id="headerUsername">
+                        Personnel
+                    </strong>
+
+                    <span id="headerRank">
+                        Foundation Personnel
+                    </span>
+
+                </div>
+
+                <div class="SmallAvatar" id="headerAvatar">
+                    <span>◉</span>
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <div class="Content">
+
+
+            <!-- PAGE INTRO -->
+
+            <section class="Welcome">
+
+                <div>
+
+                    <span class="SectionLabel">
+                        FOUNDATION SITE NETWORK
+                    </span>
+
+                    <h2>
+                        Roblox Servers
+                    </h2>
+
+                    <p>
+                        Monitor active Foundation game servers and
+                        connect directly to an authorized site.
+                    </p>
+
+                </div>
+
+
+                <div class="Clearance">
+
+                    <span>
+                        NETWORK
+                    </span>
+
+                    <strong>
+                        ONLINE
+                    </strong>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- STATISTICS -->
+
+            <section class="Stats">
+
+                <div class="StatCard">
+
+                    <span class="StatLabel">
+                        ACTIVE SITES
+                    </span>
+
+                    <strong id="activeSites">
+                        0
+                    </strong>
+
+                    <small>
+                        Registered Foundation sites
+                    </small>
+
+                </div>
+
+
+                <div class="StatCard">
+
+                    <span class="StatLabel">
+                        ONLINE SERVERS
+                    </span>
+
+                    <strong id="onlineServers">
+                        0
+                    </strong>
+
+                    <small>
+                        Active Roblox instances
+                    </small>
+
+                </div>
+
+
+                <div class="StatCard">
+
+                    <span class="StatLabel">
+                        PERSONNEL ONLINE
+                    </span>
+
+                    <strong id="personnelOnline">
+                        0
+                    </strong>
+
+                    <small>
+                        Foundation personnel
+                    </small>
+
+                </div>
+
+
+                <div class="StatCard">
+
+                    <span class="StatLabel">
+                        LAST UPDATE
+                    </span>
+
+                    <strong id="lastUpdate">
+                        --
+                    </strong>
+
+                    <small>
+                        Server registry status
+                    </small>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- SERVER PANEL -->
+
+            <section class="Panel">
+
+                <div class="PanelHeader">
+
+                    <div>
+
+                        <span class="SectionLabel">
+                            ACTIVE INFRASTRUCTURE
+                        </span>
+
+                        <h3>
+                            Foundation Servers
+                        </h3>
+
+                    </div>
+
+
+                    <div class="Controls">
+
+                        <select id="siteFilter">
+
+                            <option value="all">
+                                All Sites
+                            </option>
+
+                        </select>
+
+
+                        <button
+                            id="refreshButton"
+                            class="RefreshButton"
+                        >
+                            ↻ Refresh
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    id="serverList"
+                    class="ServerList"
+                >
+
+                    <div class="Loading">
+                        <div class="LoadingSpinner"></div>
+
+                        <span>
+                            Searching for active servers...
+                        </span>
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- NETWORK INFORMATION -->
+
+            <section class="Panel">
+
+                <div class="PanelHeader">
+
+                    <div>
+
+                        <span class="SectionLabel">
+                            NETWORK INFORMATION
+                        </span>
+
+                        <h3>
+                            Server Discovery
+                        </h3>
+
+                    </div>
+
+                </div>
+
+
+                <div class="InfoGrid">
+
+
+                    <div class="InfoItem">
+
+                        <div class="InfoIcon">
+                            ◉
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Server Discovery
+                            </strong>
+
+                            <span>
+                                Roblox servers automatically register
+                                with the Foundation network.
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="InfoItem">
+
+                        <div class="InfoIcon">
+                            ⛨
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Server Security
+                            </strong>
+
+                            <span>
+                                Only authenticated Foundation
+                                servers are displayed.
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="InfoItem">
+
+                        <div class="InfoIcon">
+                            ⇄
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Live Connection
+                            </strong>
+
+                            <span>
+                                Server information is refreshed
+                                automatically.
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </section>
+
+
+        </div>
+
+
+        <footer class="Footer">
+
+            <span>
+                SCPF SECURE NETWORK
+            </span>
+
+            <span>
+                System status:
+                <b>Operational</b>
+            </span>
+
+            <span>
+                © SCP Foundation
+            </span>
+
+        </footer>
+
+    </main>
+
+</div>
+
+
+<script src="/sites.js"></script>
+
+</body>
+</html>
