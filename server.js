@@ -141,7 +141,13 @@ app.get("/login/roblox", (req, res) => {
 		res.redirect(authorizationUrl)
 	})
 })
+function oauthError(res, message) {
+	const params = new URLSearchParams({
+		oauthError: message
+	})
 
+	return res.redirect(`/Dashboard.html?${params.toString()}`)
+}
 app.get("/oauth/callback", async (req, res) => {
 	const {
 		code,
@@ -151,24 +157,35 @@ app.get("/oauth/callback", async (req, res) => {
 	} = req.query
 
 	if (error) {
-		return res.status(400).send(`
-			<h1>Roblox OAuth Error</h1>
-			<p>${error}</p>
-			<p>${error_description || ""}</p>
-		`)
+		console.error(
+			"[OAUTH] Roblox OAuth error:",
+			error,
+			error_description
+		)
+
+		return oauthError(
+			res,
+			error_description || error
+		)
 	}
 
 	if (!code) {
-		return res
-			.status(400)
-			.send("Missing authorization code.")
+		console.error("[OAUTH] Missing authorization code.")
+
+		return oauthError(
+			res,
+			"Invalid OAuth session. Please try again."
+		)
 	}
 
 	if (!state) {
-		return res
-			.status(400)
-			.send("Missing OAuth state.")
-	}
+		console.error("[OAUTH] Missing OAuth state.")
+
+		return oauthError(
+			res,
+			"Invalid session. Please re-authenticate."
+		)
+}
 
 	console.log("Roblox OAuth callback received.")
 	console.log("Received state:", state)
@@ -177,22 +194,24 @@ app.get("/oauth/callback", async (req, res) => {
 
 	if (!req.session.oauthState) {
 		console.error(
-			"Roblox OAuth state missing from session."
+			"[OAUTH] Roblox OAuth state missing from session."
 		)
 
-		return res
-			.status(400)
-			.send("OAuth session expired or was lost.")
+		return oauthError(
+			res,
+			"Invalid session. Please re-authenticate."
+		)
 	}
 
 	if (state !== req.session.oauthState) {
-		console.error("Roblox OAuth state mismatch.")
-		console.error("Expected:", req.session.oauthState)
-		console.error("Received:", state)
+		console.error("[OAUTH] Roblox OAuth state mismatch.")
+		console.error("[OAUTH] Expected:", req.session.oauthState)
+		console.error("[OAUTH] Received:", state)
 
-		return res
-			.status(400)
-			.send("Invalid OAuth state.")
+		return oauthError(
+			res,
+			"Invalid session. Please re-authenticate."
+		)
 	}
 
 	delete req.session.oauthState
@@ -224,13 +243,23 @@ app.get("/oauth/callback", async (req, res) => {
 
 		if (!tokenResponse.ok) {
 			console.error(
-				"Roblox token error:",
+				"[OAUTH] Roblox token error:",
 				tokens
 			)
 
-			return res.status(400).json(tokens)
-		}
+			let message =
+				"Roblox authentication failed. Please try again."
 
+			if (
+				tokens.error === "invalid_grant" ||
+				tokens.error === "invalid_request"
+			) {
+				message =
+					"Invalid session. Please re-authenticate."
+			}
+
+			return oauthError(res, message)
+		}
 		const userResponse = await fetch(
 			"https://apis.roblox.com/oauth/v1/userinfo",
 			{
@@ -550,12 +579,17 @@ app.get("/api/roblox/:userId/groups/:groupId/role", async (req, res) => {
 				rank: group.role.rank
 			}
 		})
-	} catch (error) {
-		console.error(`[GROUP] Request failed:`, error)
+	}} catch (error) {
+			console.error(
+				"[OAUTH] Roblox OAuth exception:",
+				error
+			)
 
-		res.status(500).json({
-			error: "Internal server error."
-		})
+			return oauthError(
+				res,
+				"An unexpected authentication error occurred. Please try again."
+			)
+		}
 	}
 })
 
