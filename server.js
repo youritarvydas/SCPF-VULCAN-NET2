@@ -215,126 +215,126 @@ app.get("/oauth/callback", async (req, res) => {
 	}
 
 	delete req.session.oauthState
-
 	try {
-		const tokenBody = new URLSearchParams({
-			client_id: ROBLOX_CLIENT_ID,
-			client_secret: ROBLOX_CLIENT_SECRET,
-			grant_type: "authorization_code",
-			code,
-			redirect_uri: ROBLOX_REDIRECT_URI
-		})
+    const tokenBody = new URLSearchParams({
+        client_id: ROBLOX_CLIENT_ID,
+        client_secret: ROBLOX_CLIENT_SECRET,
+        grant_type: "authorization_code",
+        code,
+        redirect_uri: ROBLOX_REDIRECT_URI
+    })
 
-		const tokenResponse = await fetch(
-			"https://apis.roblox.com/oauth/v1/token",
-			{
-				method: "POST",
+    const tokenResponse = await fetch(
+        "https://apis.roblox.com/oauth/v1/token",
+        {
+            method: "POST",
+            headers: {
+                "Content-Type":
+                    "application/x-www-form-urlencoded"
+            },
+            body: tokenBody.toString()
+        }
+    )
 
-				headers: {
-					"Content-Type":
-						"application/x-www-form-urlencoded"
-				},
+    const tokens = await tokenResponse.json()
 
-				body: tokenBody.toString()
-			}
-		)
+    if (!tokenResponse.ok) {
+        console.error(
+            "[OAUTH] Roblox token error:",
+            tokens
+        )
 
-		const tokens = await tokenResponse.json()
+        let message =
+            "Roblox authentication failed. Please try again."
 
-		if (!tokenResponse.ok) {
-			console.error(
-				"[OAUTH] Roblox token error:",
-				tokens
-			)
+        if (
+            tokens.error === "invalid_grant" ||
+            tokens.error === "invalid_request"
+        ) {
+            message =
+                "Invalid session. Please re-authenticate."
+        }
 
-			let message =
-				"Roblox authentication failed. Please try again."
+        return oauthError(res, message)
+    }
 
-			if (
-				tokens.error === "invalid_grant" ||
-				tokens.error === "invalid_request"
-			) {
-				message =
-					"Invalid session. Please re-authenticate."
-			}
+    const userResponse = await fetch(
+        "https://apis.roblox.com/oauth/v1/userinfo",
+        {
+            headers: {
+                Authorization:
+                    `Bearer ${tokens.access_token}`
+            }
+        }
+    )
 
-			return oauthError(res, message)
-		}
-		const userResponse = await fetch(
-			"https://apis.roblox.com/oauth/v1/userinfo",
-			{
-				headers: {
-					Authorization:
-						`Bearer ${tokens.access_token}`
-				}
-			}
-		)
+    const user = await userResponse.json()
 
-		const user = await userResponse.json()
+    if (!userResponse.ok) {
+        console.error(
+            "[OAUTH] Roblox userinfo error:",
+            user
+        )
 
-		if (!userResponse.ok) {
-			console.error(
-				"Roblox userinfo error:",
-				user
-			)
+        return oauthError(
+            res,
+            "Failed to retrieve your Roblox account. Please try again."
+        )
+    }
 
-			return res.status(400).json(user)
-		}
+    req.session.roblox = {
+        id: user.sub,
+        username:
+            user.preferred_username ||
+            user.nickname ||
+            user.name,
+        displayName:
+            user.name ||
+            user.nickname ||
+            user.preferred_username,
+        avatar: user.picture || null
+    }
 
-		console.log("Roblox user:", user)
+    req.session.robloxAccessToken =
+        tokens.access_token
 
-		req.session.roblox = {
-			id: user.sub,
-			username:
-				user.preferred_username ||
-				user.nickname ||
-				user.name,
-			displayName:
-				user.name ||
-				user.nickname ||
-				user.preferred_username,
-			avatar: user.picture || null
-		}
+    if (req.session.discord) {
+        await linkAccounts(
+            req.session.roblox,
+            req.session.discord
+        )
+    }
 
-		req.session.robloxAccessToken =
-			tokens.access_token
+    req.session.save((err) => {
+        if (err) {
+            console.error(
+                "Failed to save Roblox session:",
+                err
+            )
 
-		if (req.session.discord) {
-			await linkAccounts(
-				req.session.roblox,
-				req.session.discord
-			)
-		}
+            return res
+                .status(500)
+                .send("Failed to save login session.")
+        }
 
-		req.session.save((err) => {
-			if (err) {
-				console.error(
-					"Failed to save Roblox session:",
-					err
-				)
+        console.log(
+            "Roblox session saved:",
+            req.sessionID
+        )
 
-				return res
-					.status(500)
-					.send("Failed to save login session.")
-			}
+        res.redirect("/Dashboard.html")
+    })
+} catch (error) {
+    console.error(
+        "[OAUTH] Roblox OAuth error:",
+        error
+    )
 
-			console.log(
-				"Roblox session saved:",
-				req.sessionID
-			)
-
-			res.redirect("/Dashboard.html")
-		})
-	} catch (error) {
-		console.error(
-			"Roblox OAuth error:",
-			error
-		)
-
-		res
-			.status(500)
-			.send("Internal server error.")
-	}
+    return oauthError(
+        res,
+        "An unexpected authentication error occurred. Please try again."
+    )
+}
 })
 
 app.get("/api/account", async (req, res) => {
