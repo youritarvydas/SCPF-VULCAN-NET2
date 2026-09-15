@@ -244,5 +244,90 @@ function logout() {
 	window.location.href = "/logout"
 }
 
+function showOAuthToast(message) {
+	const toast =
+		document.getElementById("oauthToast")
+
+	const messageElement =
+		document.getElementById("oauthToastMessage")
+
+	const close =
+		document.getElementById("oauthToastClose")
+
+	if (!toast || !messageElement) {
+		return
+	}
+
+	messageElement.textContent = message
+
+	toast.classList.add("show")
+
+	let timeout = setTimeout(() => {
+		toast.classList.remove("show")
+	}, 6000)
+
+	if (close) {
+		close.onclick = () => {
+			clearTimeout(timeout)
+			toast.classList.remove("show")
+		}
+	}
+}
+
+function showOAuthError() {
+	const params = new URLSearchParams(
+		window.location.search
+	)
+
+	const error = params.get("oauthError")
+
+	if (!error) {
+		return
+	}
+
+	const messages = {
+		invalid_session:
+			"Invalid session. Please re-authenticate.",
+
+		invalid_code:
+			"This authorization code is invalid or has already been used. Please try again.",
+
+		cancelled:
+			"Authentication was cancelled.",
+
+		authorization_failed:
+			"Roblox authentication failed. Please try again.",
+
+		token_failed:
+			"Failed to authenticate with Roblox. Please try again.",
+
+		userinfo_failed:
+			"Failed to retrieve your Roblox account. Please try again.",
+
+		server_error:
+			"An unexpected error occurred. Please try again."
+	}
+
+	const message =
+		messages[error] ||
+		"Authentication failed. Please try again."
+
+	showOAuthToast(message)
+
+	const url = new URL(
+		window.location.href
+	)
+
+	url.searchParams.delete("oauthError")
+
+	window.history.replaceState(
+		{},
+		document.title,
+		url.pathname + url.search
+	)
+}
+
+showOAuthError()
+
 loadAccount()
 
