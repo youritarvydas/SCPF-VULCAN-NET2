@@ -112,19 +112,21 @@ app.get("/login/roblox", (req, res) => {
 
 	req.session.oauthState = state
 
-	console.log("Roblox OAuth state created:", state)
-	console.log("Session ID:", req.sessionID)
+	console.log("[OAUTH] Starting Roblox authentication")
+	console.log("[OAUTH] Session ID:", req.sessionID)
+	console.log("[OAUTH] State:", state)
 
-	req.session.save((err) => {
-		if (err) {
+	req.session.save((error) => {
+		if (error) {
 			console.error(
-				"Failed to save Roblox OAuth session:",
-				err
+				"[OAUTH] Failed to save session:",
+				error
 			)
 
-			return res
-				.status(500)
-				.send("Failed to initialize OAuth session.")
+			return oauthError(
+				res,
+				"server_error"
+			)
 		}
 
 		const params = new URLSearchParams({
@@ -138,9 +140,15 @@ app.get("/login/roblox", (req, res) => {
 		const authorizationUrl =
 			`https://apis.roblox.com/oauth/v1/authorize?${params.toString()}`
 
+		console.log(
+			"[OAUTH] Redirecting to Roblox"
+		)
+
 		res.redirect(authorizationUrl)
 	})
 })
+
+
 function oauthError(res, message) {
 	const params = new URLSearchParams({
 		oauthError: message
@@ -148,6 +156,8 @@ function oauthError(res, message) {
 
 	return res.redirect(`/Dashboard.html?${params.toString()}`)
 }
+
+
 app.get("/oauth/callback", async (req, res) => {
 	const {
 		code,
@@ -156,185 +166,306 @@ app.get("/oauth/callback", async (req, res) => {
 		error_description
 	} = req.query
 
+	console.log("[OAUTH] Roblox callback received")
+	console.log("[OAUTH] Session ID:", req.sessionID)
+	console.log("[OAUTH] Error:", error || "none")
+
 	if (error) {
 		console.error(
-			"[OAUTH] Roblox OAuth error:",
+			"[OAUTH] Roblox authorization failed:",
 			error,
-			error_description
+			error_description || ""
 		)
+
+		if (error === "access_denied") {
+			return oauthError(
+				res,
+				"cancelled"
+			)
+		}
 
 		return oauthError(
 			res,
-			error_description || error
+			"authorization_failed"
 		)
 	}
 
 	if (!code) {
-		console.error("[OAUTH] Missing authorization code.")
+		console.error(
+			"[OAUTH] Missing authorization code"
+		)
 
 		return oauthError(
 			res,
-			"Invalid OAuth session. Please try again."
+			"invalid_code"
 		)
 	}
 
 	if (!state) {
-		console.error("[OAUTH] Missing OAuth state.")
-
-		return oauthError(
-			res,
-			"Invalid session. Please re-authenticate."
-		)
-}
-
-	console.log("Roblox OAuth callback received.")
-	console.log("Received state:", state)
-	console.log("Session ID:", req.sessionID)
-	console.log("Session state:", req.session.oauthState)
-
-	if (!req.session.oauthState) {
 		console.error(
-			"[OAUTH] Roblox OAuth state missing from session."
+			"[OAUTH] Missing OAuth state"
 		)
 
 		return oauthError(
 			res,
-			"Invalid session. Please re-authenticate."
+			"invalid_session"
 		)
 	}
 
-	if (state !== req.session.oauthState) {
-		console.error("[OAUTH] Roblox OAuth state mismatch.")
-		console.error("[OAUTH] Expected:", req.session.oauthState)
-		console.error("[OAUTH] Received:", state)
+	if (!req.session.oauthState) {
+		console.error(
+			"[OAUTH] OAuth state missing from session"
+		)
 
 		return oauthError(
 			res,
-			"Invalid session. Please re-authenticate."
+			"invalid_session"
+		)
+	}
+
+	console.log(
+		"[OAUTH] Expected state:",
+		req.session.oauthState
+	)
+
+	console.log(
+		"[OAUTH] Received state:",
+		state
+	)
+
+	if (state !== req.session.oauthState) {
+		console.error(
+			"[OAUTH] OAuth state mismatch"
+		)
+
+		delete req.session.oauthState
+
+		return oauthError(
+			res,
+			"invalid_session"
 		)
 	}
 
 	delete req.session.oauthState
+
 	try {
-    const tokenBody = new URLSearchParams({
-        client_id: ROBLOX_CLIENT_ID,
-        client_secret: ROBLOX_CLIENT_SECRET,
-        grant_type: "authorization_code",
-        code,
-        redirect_uri: ROBLOX_REDIRECT_URI
-    })
+		console.log(
+			"[OAUTH] Exchanging authorization code for token"
+		)
 
-    const tokenResponse = await fetch(
-        "https://apis.roblox.com/oauth/v1/token",
-        {
-            method: "POST",
-            headers: {
-                "Content-Type":
-                    "application/x-www-form-urlencoded"
-            },
-            body: tokenBody.toString()
-        }
-    )
+		const tokenBody = new URLSearchParams({
+			client_id: ROBLOX_CLIENT_ID,
+			client_secret: ROBLOX_CLIENT_SECRET,
+			grant_type: "authorization_code",
+			code,
+			redirect_uri: ROBLOX_REDIRECT_URI
+		})
 
-    const tokens = await tokenResponse.json()
+		const tokenResponse = await fetch(
+			"https://apis.roblox.com/oauth/v1/token",
+			{
+				method: "POST",
+				headers: {
+					"Content-Type":
+						"application/x-www-form-urlencoded"
+				},
+				body: tokenBody.toString()
+			}
+		)
 
-    if (!tokenResponse.ok) {
-        console.error(
-            "[OAUTH] Roblox token error:",
-            tokens
-        )
+		let tokens
 
-        let message =
-            "Roblox authentication failed. Please try again."
+		try {
+			tokens = await tokenResponse.json()
+		} catch {
+			tokens = {}
+		}
 
-        if (
-            tokens.error === "invalid_grant" ||
-            tokens.error === "invalid_request"
-        ) {
-            message =
-                "Invalid session. Please re-authenticate."
-        }
+		if (!tokenResponse.ok) {
+			console.error(
+				"[OAUTH] Roblox token request failed"
+			)
 
-        return oauthError(res, message)
-    }
+			console.error(
+				"[OAUTH] Status:",
+				tokenResponse.status
+			)
 
-    const userResponse = await fetch(
-        "https://apis.roblox.com/oauth/v1/userinfo",
-        {
-            headers: {
-                Authorization:
-                    `Bearer ${tokens.access_token}`
-            }
-        }
-    )
+			console.error(
+				"[OAUTH] Response:",
+				tokens
+			)
 
-    const user = await userResponse.json()
+			if (
+				tokens.error === "invalid_grant" ||
+				tokens.error === "invalid_request"
+			) {
+				return oauthError(
+					res,
+					"invalid_code"
+				)
+			}
 
-    if (!userResponse.ok) {
-        console.error(
-            "[OAUTH] Roblox userinfo error:",
-            user
-        )
+			return oauthError(
+				res,
+				"token_failed"
+			)
+		}
 
-        return oauthError(
-            res,
-            "Failed to retrieve your Roblox account. Please try again."
-        )
-    }
+		if (!tokens.access_token) {
+			console.error(
+				"[OAUTH] Roblox did not return an access token"
+			)
 
-    req.session.roblox = {
-        id: user.sub,
-        username:
-            user.preferred_username ||
-            user.nickname ||
-            user.name,
-        displayName:
-            user.name ||
-            user.nickname ||
-            user.preferred_username,
-        avatar: user.picture || null
-    }
+			return oauthError(
+				res,
+				"token_failed"
+			)
+		}
 
-    req.session.robloxAccessToken =
-        tokens.access_token
+		console.log(
+			"[OAUTH] Access token received"
+		)
 
-    if (req.session.discord) {
-        await linkAccounts(
-            req.session.roblox,
-            req.session.discord
-        )
-    }
+		console.log(
+			"[OAUTH] Requesting Roblox user information"
+		)
 
-    req.session.save((err) => {
-        if (err) {
-            console.error(
-                "Failed to save Roblox session:",
-                err
-            )
+		const userResponse = await fetch(
+			"https://apis.roblox.com/oauth/v1/userinfo",
+			{
+				headers: {
+					Authorization:
+						`Bearer ${tokens.access_token}`
+				}
+			}
+		)
 
-            return res
-                .status(500)
-                .send("Failed to save login session.")
-        }
+		let user
 
-        console.log(
-            "Roblox session saved:",
-            req.sessionID
-        )
+		try {
+			user = await userResponse.json()
+		} catch {
+			user = {}
+		}
 
-        res.redirect("/Dashboard.html")
-    })
-} catch (error) {
-    console.error(
-        "[OAUTH] Roblox OAuth error:",
-        error
-    )
+		if (!userResponse.ok) {
+			console.error(
+				"[OAUTH] Roblox userinfo request failed"
+			)
 
-    return oauthError(
-        res,
-        "An unexpected authentication error occurred. Please try again."
-    )
-}
+			console.error(
+				"[OAUTH] Status:",
+				userResponse.status
+			)
+
+			console.error(
+				"[OAUTH] Response:",
+				user
+			)
+
+			return oauthError(
+				res,
+				"userinfo_failed"
+			)
+		}
+
+		if (!user.sub) {
+			console.error(
+				"[OAUTH] Roblox userinfo did not contain a user ID"
+			)
+
+			return oauthError(
+				res,
+				"userinfo_failed"
+			)
+		}
+
+		console.log(
+			"[OAUTH] Roblox user ID:",
+			user.sub
+		)
+
+		console.log(
+			"[OAUTH] Roblox username:",
+			user.preferred_username ||
+			user.nickname ||
+			user.name
+		)
+
+		req.session.roblox = {
+			id: user.sub,
+			username:
+				user.preferred_username ||
+				user.nickname ||
+				user.name,
+			displayName:
+				user.name ||
+				user.nickname ||
+				user.preferred_username,
+			avatar: user.picture || null
+		}
+
+		req.session.robloxAccessToken =
+			tokens.access_token
+
+		if (req.session.discord) {
+			console.log(
+				"[OAUTH] Discord account already authenticated"
+			)
+
+			try {
+				await linkAccounts(
+					req.session.roblox,
+					req.session.discord
+				)
+
+				console.log(
+					"[OAUTH] Roblox and Discord accounts linked"
+				)
+			} catch (error) {
+				console.error(
+					"[OAUTH] Failed to link accounts:",
+					error
+				)
+			}
+		}
+
+		req.session.save((error) => {
+			if (error) {
+				console.error(
+					"[OAUTH] Failed to save authenticated session:",
+					error
+				)
+
+				return oauthError(
+					res,
+					"server_error"
+				)
+			}
+
+			console.log(
+				"[OAUTH] Authentication successful"
+			)
+
+			console.log(
+				"[OAUTH] Session saved:",
+				req.sessionID
+			)
+
+			res.redirect("/Dashboard.html")
+		})
+	} catch (error) {
+		console.error(
+			"[OAUTH] Unexpected Roblox OAuth error:",
+			error
+		)
+
+		return oauthError(
+			res,
+			"server_error"
+		)
+	}
 })
 
 app.get("/api/account", async (req, res) => {
