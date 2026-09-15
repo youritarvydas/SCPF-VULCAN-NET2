@@ -1,0 +1,548 @@
+:root {
+    --bg: #080b10;
+    --sidebar: #0b0f15;
+    --panel: #0d1219;
+    --panel-hover: #111820;
+
+    --border: #202832;
+    --border-light: #2a333e;
+
+    --text: #e7ebef;
+    --muted: #7f8a97;
+
+    --blue: #4d9cff;
+    --green: #48d597;
+    --orange: #e5a451;
+    --red: #e05d67;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+button,
+input {
+    font-family: inherit;
+}
+
+.Dashboard {
+    display: flex;
+    min-height: 100vh;
+}
+
+.Sidebar {
+    width: 250px;
+    min-height: 100vh;
+
+    background: var(--sidebar);
+    border-right: 1px solid var(--border);
+
+    display: flex;
+    flex-direction: column;
+}
+
+.Logo {
+    height: 80px;
+    padding: 0 24px;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.LogoIcon {
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid var(--border-light);
+    background: var(--panel);
+
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.Logo strong {
+    display: block;
+    font-size: 15px;
+    letter-spacing: 1px;
+}
+
+.Logo small {
+    display: block;
+    margin-top: 3px;
+
+    color: var(--muted);
+    font-size: 9px;
+    letter-spacing: 1.5px;
+}
+
+.Navigation {
+    padding: 18px 12px;
+}
+
+.NavItem {
+    height: 44px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+    padding: 0 14px;
+
+    color: var(--muted);
+    text-decoration: none;
+
+    font-size: 13px;
+
+    border: 1px solid transparent;
+}
+
+.NavItem span {
+    width: 18px;
+    text-align: center;
+}
+
+.NavItem:hover {
+    color: var(--text);
+    background: var(--panel);
+}
+
+.NavItem.active {
+    color: var(--text);
+    background: var(--panel);
+    border-color: var(--border);
+}
+
+.NavItem.active span {
+    color: var(--blue);
+}
+
+.SidebarBottom {
+    margin-top: auto;
+    padding: 16px;
+
+    border-top: 1px solid var(--border);
+}
+
+.SystemStatus {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 12px;
+
+    margin-bottom: 12px;
+
+    background: var(--panel);
+    border: 1px solid var(--border);
+}
+
+.StatusDot {
+    width: 7px;
+    height: 7px;
+
+    background: var(--green);
+    border-radius: 50%;
+}
+
+.SystemStatus strong {
+    display: block;
+    font-size: 9px;
+    letter-spacing: 1px;
+}
+
+.SystemStatus small {
+    display: block;
+
+    margin-top: 4px;
+
+    color: var(--muted);
+    font-size: 9px;
+}
+
+.LogoutButton {
+    width: 100%;
+    height: 38px;
+
+    background: transparent;
+    color: var(--muted);
+
+    border: 1px solid var(--border);
+
+    cursor: pointer;
+}
+
+.LogoutButton:hover {
+    color: var(--red);
+    border-color: var(--red);
+}
+
+.Main {
+    flex: 1;
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.TopBar {
+    height: 80px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 32px;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.Breadcrumb {
+    color: var(--blue);
+
+    font-size: 9px;
+    font-weight: bold;
+
+    letter-spacing: 1.5px;
+}
+
+.TopBar h1 {
+    margin-top: 5px;
+
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.Account {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.Account img {
+    width: 38px;
+    height: 38px;
+
+    object-fit: cover;
+
+    border: 1px solid var(--border);
+}
+
+.Account strong {
+    display: block;
+    font-size: 12px;
+}
+
+.Account small {
+    display: block;
+
+    margin-top: 4px;
+
+    color: var(--muted);
+    font-size: 10px;
+}
+
+.ApplicationContent {
+    flex: 1;
+
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+
+    padding: 50px 30px;
+}
+
+.ApplicationPanel {
+    width: 100%;
+    max-width: 720px;
+
+    background: var(--panel);
+    border: 1px solid var(--border);
+}
+
+.PanelHeader {
+    display: flex;
+    justify-content: space-between;
+
+    padding: 30px;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.PanelLabel {
+    color: var(--blue);
+
+    font-size: 9px;
+    font-weight: bold;
+
+    letter-spacing: 1.5px;
+}
+
+.PanelHeader h2 {
+    margin-top: 8px;
+
+    font-size: 21px;
+    font-weight: 500;
+}
+
+.PanelHeader p {
+    max-width: 500px;
+
+    margin-top: 9px;
+
+    color: var(--muted);
+
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.ExperimentIcon {
+    width: 48px;
+    height: 48px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: var(--blue);
+
+    border: 1px solid var(--border-light);
+    background: var(--bg);
+
+    font-size: 18px;
+}
+
+.InputSection {
+    padding: 30px 30px 20px;
+}
+
+.InputSection label {
+    display: block;
+
+    margin-bottom: 9px;
+
+    color: var(--muted);
+
+    font-size: 9px;
+    font-weight: bold;
+
+    letter-spacing: 1.2px;
+}
+
+.InputSection input {
+    width: 100%;
+    height: 46px;
+
+    padding: 0 14px;
+
+    background: var(--bg);
+    color: var(--text);
+
+    border: 1px solid var(--border-light);
+
+    outline: none;
+
+    font-size: 13px;
+}
+
+.InputSection input:focus {
+    border-color: var(--blue);
+}
+
+.InputSection input::placeholder {
+    color: #4f5964;
+}
+
+.ErrorMessage {
+    display: block;
+
+    min-height: 18px;
+
+    margin-top: 7px;
+
+    color: var(--red);
+
+    font-size: 10px;
+}
+
+.LaunchButton {
+    height: 46px;
+
+    margin: 0 30px 30px;
+    padding: 0 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 9px;
+
+    background: var(--blue);
+    color: #ffffff;
+
+    border: 0;
+
+    cursor: pointer;
+
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: .5px;
+
+    transition: opacity .15s;
+}
+
+.LaunchButton:hover {
+    opacity: .85;
+}
+
+.LaunchButton:active {
+    opacity: .7;
+}
+
+.WarningBox {
+    margin: 0 30px 30px;
+    padding: 14px;
+
+    display: flex;
+    gap: 12px;
+
+    background: rgba(229, 164, 81, .04);
+
+    border: 1px solid rgba(229, 164, 81, .25);
+}
+
+.WarningBox > span {
+    width: 20px;
+    height: 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid var(--orange);
+
+    color: var(--orange);
+
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.WarningBox strong {
+    display: block;
+
+    color: var(--orange);
+
+    font-size: 9px;
+    letter-spacing: 1px;
+}
+
+.WarningBox p {
+    margin-top: 5px;
+
+    color: var(--muted);
+
+    font-size: 10px;
+    line-height: 1.5;
+}
+
+.Footer {
+    height: 45px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 30px;
+
+    border-top: 1px solid var(--border);
+
+    color: var(--muted);
+
+    font-size: 8px;
+    letter-spacing: 1px;
+}
+
+@media (max-width: 700px) {
+
+    .Sidebar {
+        width: 65px;
+    }
+
+    .Logo {
+        padding: 0;
+        justify-content: center;
+    }
+
+    .Logo > div,
+    .NavItem:not(.active)::after,
+    .NavItem {
+        font-size: 0;
+    }
+
+    .Navigation {
+        padding: 12px 8px;
+    }
+
+    .NavItem {
+        justify-content: center;
+        padding: 0;
+    }
+
+    .SidebarBottom {
+        padding: 8px;
+    }
+
+    .SystemStatus {
+        justify-content: center;
+    }
+
+    .SystemStatus > div,
+    .LogoutButton {
+        display: none;
+    }
+
+    .TopBar {
+        padding: 0 18px;
+    }
+
+    .Account {
+        display: none;
+    }
+
+    .ApplicationContent {
+        padding: 25px 15px;
+    }
+
+    .PanelHeader,
+    .InputSection {
+        padding: 22px;
+    }
+
+    .LaunchButton {
+        margin-left: 22px;
+        margin-right: 22px;
+    }
+
+    .WarningBox {
+        margin-left: 22px;
+        margin-right: 22px;
+    }
+
+    .Footer {
+        padding: 0 15px;
+    }
+}
