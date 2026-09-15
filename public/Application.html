@@ -4,118 +4,268 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SCPF - Application</title>
-    <link rel="stylesheet" href="/application.css">
+
+    <link rel="stylesheet" href="./application.css">
 </head>
+
 <body>
-    <div class="Dashboard">
-        <aside class="Sidebar">
-            <div class="Logo">
-                <div class="LogoMark">S</div>
+
+<div class="app">
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            <div class="logo-mark">S</div>
+
+            <div class="logo-text">
+                <strong>SCPF</strong>
+                <span>SITE NETWORK</span>
+            </div>
+        </div>
+
+        <nav class="navigation">
+
+            <a href="./Dashboard.html" class="nav-item">
+                <span>⌂</span>
+                Dashboard
+            </a>
+
+            <a href="./Sites.html" class="nav-item">
+                <span>⌖</span>
+                Sites
+            </a>
+
+            <a href="./Application.html" class="nav-item active">
+                <span>▣</span>
+                Application
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <div class="system-status">
+                <span class="status-dot"></span>
+
                 <div>
-                    <strong>SCPF</strong>
-                    <span>SITE NETWORK</span>
+                    <strong>SYSTEM ONLINE</strong>
+                    <small>Foundation Network</small>
                 </div>
             </div>
 
-            <nav class="Navigation">
-                <a class="NavItem" href="/Dashboard.html"><span>⌂</span>Dashboard</a>
-                <a class="NavItem" href="/Sites.html"><span>⌖</span>Sites</a>
-                <a class="NavItem active" href="/Application.html"><span>▣</span>Application</a>
-            </nav>
+            <button id="logoutButton" class="logout-button">
+                <span>↪</span>
+                Logout
+            </button>
 
-            <div class="SidebarBottom">
-                <div class="SystemStatus">
-                    <span class="StatusDot"></span>
-                    <div>
-                        <strong>SYSTEM ONLINE</strong>
-                        <small>Foundation Network</small>
-                    </div>
-                </div>
-                <button class="LogoutButton" onclick="logout()"><span>↪</span>Logout</button>
+        </div>
+
+    </aside>
+
+
+    <main class="main">
+
+        <header class="topbar">
+
+            <div>
+                <span class="eyebrow">
+                    FOUNDATION NETWORK
+                </span>
+
+                <h1>Application</h1>
             </div>
-        </aside>
 
-        <main class="Main">
-            <header class="TopBar">
+            <div class="account">
+
+                <div class="account-avatar">
+                    ?
+                </div>
+
                 <div>
-                    <span class="Eyebrow">FOUNDATION NETWORK</span>
-                    <h1>Application</h1>
-                </div>
-                <div class="Account">
-                    <div class="AccountAvatar">?</div>
-                    <div>
-                        <strong id="headerUsername">Foundation Personnel</strong>
-                        <span id="headerRank">Level 1 Clearance</span>
-                    </div>
-                </div>
-            </header>
+                    <strong id="username">
+                        Foundation Personnel
+                    </strong>
 
-            <section class="ApplicationHero">
-                <div class="HeroIcon">SCP</div>
+                    <span id="rank">
+                        Level 1 Clearance
+                    </span>
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <section class="hero">
+
+            <div class="hero-icon">
+                SCP
+            </div>
+
+            <div>
+
+                <span class="section-label">
+                    EXPERIMENT ACCESS
+                </span>
+
+                <h2>
+                    Launch Experiment
+                </h2>
+
+                <p>
+                    Open the designated Foundation experiment directly through the Roblox client.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <section class="panel">
+
+            <div class="panel-header">
+
                 <div>
-                    <span class="SectionLabel">EXPERIMENT ACCESS</span>
-                    <h2>Launch Experiment</h2>
-                    <p>Open the designated Foundation experiment directly through the Roblox client.</p>
-                </div>
-            </section>
 
-            <section class="Panel">
-                <div class="PanelHeader">
+                    <span class="section-label">
+                        EXPERIMENT
+                    </span>
+
+                    <h3>
+                        Experiment Information
+                    </h3>
+
+                </div>
+
+                <span class="ready">
+                    READY
+                </span>
+
+            </div>
+
+
+            <div class="experiment-card">
+
+                <div class="experiment-info">
+
+                    <div class="experiment-icon">
+                        SCP
+                    </div>
+
                     <div>
-                        <span class="SectionLabel">EXPERIMENT</span>
-                        <h3>Experiment Information</h3>
-                    </div>
-                    <span class="StatusBadge">READY</span>
-                </div>
 
-                <div class="ExperimentCard">
-                    <div class="ExperimentIdentity">
-                        <div class="ExperimentIcon">SCP</div>
-                        <div>
-                            <span class="Muted">EXPERIMENT ID</span>
-                            <strong>115720637427314</strong>
-                        </div>
+                        <span>
+                            EXPERIMENT ID
+                        </span>
+
+                        <strong>
+                            115720637427314
+                        </strong>
+
                     </div>
 
-                    <div class="ExperimentDetails">
-                        <div><span>STATUS</span><strong>Available</strong></div>
-                        <div><span>PLATFORM</span><strong>Roblox</strong></div>
-                    </div>
                 </div>
 
-                <div class="LaunchArea">
-                    <button id="launchButton" class="LaunchButton">
-                        <span>▶</span>Launch Experiment
-                    </button>
-                    <p id="errorMessage" class="ErrorMessage"></p>
-                    <p class="LaunchHint">Roblox must be installed on this device. The button will attempt to open the Roblox client.</p>
-                </div>
-            </section>
 
-            <section class="InformationGrid">
-                <div class="InfoBox">
-                    <span class="InfoIcon">i</span>
+                <div class="experiment-details">
+
                     <div>
-                        <strong>Client Launch</strong>
-                        <p>The experiment is opened using the Roblox protocol.</p>
+                        <span>STATUS</span>
+                        <strong>Available</strong>
                     </div>
-                </div>
-                <div class="InfoBox">
-                    <span class="InfoIcon">!</span>
+
                     <div>
-                        <strong>Access Notice</strong>
-                        <p>Only authorized Foundation personnel should access experiments.</p>
+                        <span>PLATFORM</span>
+                        <strong>Roblox</strong>
                     </div>
+
                 </div>
-            </section>
 
-            <footer class="Footer">
-                <span>SCPF SITE NETWORK</span>
-                <span>FOUNDATION INTERNAL SYSTEM</span>
-            </footer>
-        </main>
-    </div>
+            </div>
 
-    <script src="/application.js"></script>
+
+            <div class="launch-area">
+
+                <button id="launchButton" class="launch-button">
+                    <span>▶</span>
+                    Launch Experiment
+                </button>
+
+                <p id="message"></p>
+
+                <small>
+                    Roblox must be installed on this device.
+                </small>
+
+            </div>
+
+        </section>
+
+
+        <section class="info-grid">
+
+            <div class="info-box">
+
+                <div class="info-icon">
+                    i
+                </div>
+
+                <div>
+
+                    <strong>
+                        Client Launch
+                    </strong>
+
+                    <p>
+                        The experiment is opened using the Roblox client protocol.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <div class="info-icon">
+                    !
+                </div>
+
+                <div>
+
+                    <strong>
+                        Access Notice
+                    </strong>
+
+                    <p>
+                        Only authorized Foundation personnel should access experiments.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <footer>
+
+            <span>
+                SCPF SITE NETWORK
+            </span>
+
+            <span>
+                FOUNDATION INTERNAL SYSTEM
+            </span>
+
+        </footer>
+
+    </main>
+
+</div>
+
+
+<script src="./application.js"></script>
+
 </body>
 </html>
