@@ -383,3 +383,47 @@ body {
 .ProfilePicture.discord {
     border-color: rgba(88, 101, 242, 0.5);
 }
+
+.oauth-toast {
+	position: fixed;
+	bottom: 24px;
+	left: 50%;
+	transform: translate(-50%, 120px);
+	background: #15181d;
+	border: 1px solid #3a3f47;
+	color: #ffffff;
+	padding: 14px 18px;
+	border-radius: 8px;
+	display: flex;
+	align-items: center;
+	gap: 18px;
+	font-family: inherit;
+	font-size: 14px;
+	box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+	opacity: 0;
+	pointer-events: none;
+	transition:
+		transform 0.25s ease,
+		opacity 0.25s ease;
+	z-index: 99999;
+}
+
+.oauth-toast.show {
+	transform: translate(-50%, 0);
+	opacity: 1;
+	pointer-events: auto;
+}
+
+.oauth-toast button {
+	background: transparent;
+	border: 0;
+	color: #9da3ad;
+	font-size: 20px;
+	cursor: pointer;
+	padding: 0;
+	line-height: 1;
+}
+
+.oauth-toast button:hover {
+	color: #ffffff;
+}
