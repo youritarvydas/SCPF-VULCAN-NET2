@@ -4,179 +4,171 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>SCPF - My Profile</title>
+    <title>SCPF - Personnel Profile</title>
 
+    <link rel="stylesheet" href="/styleAccepted.css">
     <link rel="stylesheet" href="/profile.css">
 </head>
 
 <body>
 
-    <div class="Dashboard">
+<div class="Dashboard">
 
-        <!-- SIDEBAR -->
-        <aside class="Sidebar">
+    <aside class="Sidebar">
 
-            <div class="Logo">
-                <div class="LogoIcon">⚛</div>
+        <div class="Logo">
+            <div class="LogoIcon">⚛</div>
 
-                <div>
-                    <strong>SCPF</strong>
-                    <span>SITE NETWORK</span>
-                </div>
+            <div>
+                <strong>SCPF</strong>
+                <span>SITE NETWORK</span>
+            </div>
+        </div>
+
+        <nav>
+
+            <a class="NavItem" href="/">
+                <span>▦</span>
+                Dashboard
+            </a>
+
+            <a class="NavItem active" href="/profile.html">
+                <span>◉</span>
+                My Profile
+            </a>
+
+            <a class="NavItem" href="#">
+                <span>♟</span>
+                Personnel
+            </a>
+
+            <a class="NavItem" href="/sites.html">
+                <span>⌖</span>
+                Sites
+            </a>
+
+            <a class="NavItem" href="/Application.html">
+                <span>▤</span>
+                Applications
+            </a>
+
+        </nav>
+
+        <div class="SidebarBottom">
+
+            <div class="SystemStatus">
+                <span></span>
+                SYSTEM ONLINE
             </div>
 
-            <nav>
+            <button onclick="logout()" class="Logout">
+                ↪ Log out
+            </button>
 
-                <a class="NavItem" href="/">
-                    <span>▦</span>
-                    Dashboard
-                </a>
+        </div>
 
-                <a class="NavItem active" href="/profile.html">
+    </aside>
+
+
+    <main class="Main">
+
+        <header class="TopBar">
+
+            <div>
+                <span class="SectionLabel">SECURE NETWORK</span>
+                <h1>Personnel Profile</h1>
+            </div>
+
+            <div class="Account">
+
+                <div class="AccountText">
+                    <strong id="headerUsername">Personnel</strong>
+                    <span id="headerRank">Foundation Personnel</span>
+                </div>
+
+                <div class="SmallAvatar" id="headerAvatar">
                     <span>◉</span>
-                    My Profile
-                </a>
-
-                <a class="NavItem" href="#">
-                    <span>♟</span>
-                    Personnel
-                </a>
-
-                <a class="NavItem" href="/sites.html">
-                    <span>⌖</span>
-                    Sites
-                </a>
-
-                <a class="NavItem" href="/Application.html">
-                    <span>▤</span>
-                    Applications
-                </a>
-
-            </nav>
-
-            <div class="SidebarBottom">
-
-                <div class="SystemStatus">
-                    <span></span>
-                    SYSTEM ONLINE
                 </div>
-
-                <button onclick="logout()" class="Logout">
-                    ↪ Log out
-                </button>
 
             </div>
 
-        </aside>
+        </header>
 
 
-        <!-- MAIN -->
-        <main class="Main">
+        <div class="Content">
 
-            <!-- TOP BAR -->
-            <header class="TopBar">
 
-                <div>
-                    <span class="SectionLabel">
-                        SECURE NETWORK
-                    </span>
+            <section class="ProfileHero">
 
-                    <h1>My Profile</h1>
-                </div>
+                <div class="ProfileHeroIdentity">
 
-                <div class="Account">
-
-                    <div class="AccountText">
-                        <strong id="headerUsername">
-                            Personnel
-                        </strong>
-
-                        <span id="headerRank">
-                            Foundation Personnel
-                        </span>
-                    </div>
-
-                    <div class="SmallAvatar" id="headerAvatar">
+                    <div class="LargeAvatar" id="profileAvatar">
                         <span>◉</span>
                     </div>
 
-                </div>
-
-            </header>
-
-
-            <!-- CONTENT -->
-            <div class="Content">
-
-                <!-- PROFILE HEADER -->
-                <section class="ProfileHero">
-
                     <div class="ProfileIdentity">
 
-                        <div class="LargeAvatar" id="profileAvatar">
-                            <span>◉</span>
+                        <span class="SectionLabel">
+                            FOUNDATION PERSONNEL
+                        </span>
+
+                        <h2 id="profileUsername">
+                            Loading...
+                        </h2>
+
+                        <div class="ProfileRank" id="profileRank">
+                            Loading rank...
                         </div>
 
-                        <div class="ProfileIdentityText">
+                        <div class="ProfileBadges">
 
-                            <span class="SectionLabel">
-                                PERSONNEL IDENTIFICATION
+                            <span class="ProfileBadge green">
+                                ACTIVE
                             </span>
 
-                            <h2 id="profileUsername">
-                                Personnel
-                            </h2>
-
-                            <p id="profileRank">
-                                Foundation Personnel
-                            </p>
-
-                            <div class="ProfileBadges">
-
-                                <span class="Badge green">
-                                    ● ACTIVE
-                                </span>
-
-                                <span class="Badge blue">
-                                    VERIFIED
-                                </span>
-
-                            </div>
+                            <span class="ProfileBadge blue">
+                                VERIFIED
+                            </span>
 
                         </div>
 
                     </div>
 
-                    <div class="Clearance">
-
-                        <span>CLEARANCE</span>
-
-                        <strong id="profileClearance">
-                            LEVEL 1
-                        </strong>
-
-                    </div>
-
-                </section>
+                </div>
 
 
-                <!-- PROFILE INFORMATION -->
-                <section class="Panel">
+                <div class="Clearance">
+
+                    <span>CLEARANCE</span>
+
+                    <strong id="profileClearance">
+                        LEVEL 1
+                    </strong>
+
+                </div>
+
+            </section>
+
+
+            <section class="ProfileGrid">
+
+
+                <div class="Panel">
 
                     <div class="PanelHeader">
 
                         <div>
                             <span class="PanelLabel">
-                                PERSONNEL RECORD
+                                FOUNDATION RECORD
                             </span>
 
                             <h2>
-                                Profile Information
+                                Personnel Information
                             </h2>
                         </div>
 
                         <span class="PanelID">
-                            PRF-01
+                            PER-01
                         </span>
 
                     </div>
@@ -185,89 +177,41 @@
                     <div class="InformationGrid">
 
                         <div class="InformationItem">
-
-                            <span class="InformationLabel">
-                                USERNAME
-                            </span>
-
-                            <strong id="infoUsername">
-                                Personnel
-                            </strong>
-
+                            <span>ROBLOX USERNAME</span>
+                            <strong id="infoUsername">Loading...</strong>
                         </div>
 
-
                         <div class="InformationItem">
-
-                            <span class="InformationLabel">
-                                FOUNDATION RANK
-                            </span>
-
-                            <strong id="infoRank">
-                                Foundation Personnel
-                            </strong>
-
+                            <span>ROBLOX USER ID</span>
+                            <strong id="infoRobloxId">Loading...</strong>
                         </div>
 
-
                         <div class="InformationItem">
-
-                            <span class="InformationLabel">
-                                CLEARANCE LEVEL
-                            </span>
-
-                            <strong id="infoClearance">
-                                LEVEL 1
-                            </strong>
-
+                            <span>FOUNDATION RANK</span>
+                            <strong id="infoRank">Loading...</strong>
                         </div>
 
-
                         <div class="InformationItem">
-
-                            <span class="InformationLabel">
-                                ACCOUNT STATUS
-                            </span>
-
-                            <strong class="StatusText">
-                                ACTIVE
-                            </strong>
-
+                            <span>RANK ID</span>
+                            <strong id="infoRankId">Loading...</strong>
                         </div>
 
-
                         <div class="InformationItem">
-
-                            <span class="InformationLabel">
-                                SECURITY STATUS
-                            </span>
-
-                            <strong class="StatusText">
-                                VERIFIED
-                            </strong>
-
+                            <span>CLEARANCE LEVEL</span>
+                            <strong id="infoClearance">LEVEL 1</strong>
                         </div>
 
-
                         <div class="InformationItem">
-
-                            <span class="InformationLabel">
-                                LAST LOGIN
-                            </span>
-
-                            <strong id="lastLogin">
-                                Just now
-                            </strong>
-
+                            <span>LAST LOGIN</span>
+                            <strong id="lastLogin">Loading...</strong>
                         </div>
 
                     </div>
 
-                </section>
+                </div>
 
 
-                <!-- LINKED ACCOUNTS -->
-                <section class="Panel">
+                <div class="Panel">
 
                     <div class="PanelHeader">
 
@@ -288,267 +232,141 @@
                     </div>
 
 
-                    <div class="AccountsConnection">
+                    <div class="LinkedAccountsProfile">
 
-                        <!-- ROBLOX -->
-                        <div class="LinkedAccount">
 
-                            <div
-                                class="ProfilePicture"
-                                id="robloxAvatar"
-                            >
+                        <div class="LinkedAccountProfile">
+
+                            <div class="ProfilePicture" id="robloxAvatar">
                                 <span>R</span>
                             </div>
 
                             <div class="AccountName">
-
                                 <span>ROBLOX</span>
-
-                                <strong id="robloxUsername">
-                                    Not linked
-                                </strong>
-
-                                <small id="robloxId">
-                                    No Roblox account linked
-                                </small>
-
+                                <strong id="robloxUsername">Loading...</strong>
+                                <small id="robloxId">Loading...</small>
                             </div>
 
                         </div>
 
 
-                        <!-- CONNECTION -->
-                        <div class="ConnectionLine">
-
-                            <div
-                                class="ConnectionIcon"
-                                id="connectionIcon"
-                            >
+                        <div class="ProfileConnection">
+                            <div class="ConnectionIcon">
                                 🔗
                             </div>
-
-                            <div
-                                class="ConnectionStatus"
-                                id="connectionStatus"
-                            >
-                                NOT LINKED
-                            </div>
-
                         </div>
 
 
-                        <!-- DISCORD -->
-                        <div class="LinkedAccount">
+                        <div class="LinkedAccountProfile">
 
-                            <div
-                                class="ProfilePicture"
-                                id="discordAvatar"
-                            >
+                            <div class="ProfilePicture" id="discordAvatar">
                                 <span>D</span>
                             </div>
 
                             <div class="AccountName">
-
                                 <span>DISCORD</span>
-
-                                <strong id="discordUsername">
-                                    Not linked
-                                </strong>
-
-                                <small id="discordId">
-                                    No Discord account linked
-                                </small>
-
+                                <strong id="discordUsername">Not linked</strong>
+                                <small id="discordId">No Discord account linked</small>
                             </div>
 
                         </div>
 
                     </div>
 
-                </section>
+                </div>
 
 
-                <!-- SECURITY -->
-                <section class="Panel">
+            </section>
 
-                    <div class="PanelHeader">
 
-                        <div>
-                            <span class="PanelLabel">
-                                ACCOUNT SECURITY
-                            </span>
+            <section class="Panel">
 
-                            <h2>
-                                Security Information
-                            </h2>
-                        </div>
+                <div class="PanelHeader">
 
-                        <span class="PanelID">
-                            SEC-01
+                    <div>
+                        <span class="PanelLabel">
+                            ROBLOX PERSONNEL DATA
                         </span>
 
+                        <h2>
+                            Group Memberships
+                        </h2>
                     </div>
 
+                    <span class="PanelID">
+                        GRP-01
+                    </span>
 
-                    <div class="SecurityList">
-
-                        <div class="SecurityItem">
-
-                            <div class="SecurityIcon green">
-                                ✓
-                            </div>
-
-                            <div>
-                                <strong>Account Verified</strong>
-
-                                <span>
-                                    Your account has successfully passed
-                                    Foundation authentication.
-                                </span>
-                            </div>
-
-                            <b class="SecurityStatus">
-                                VERIFIED
-                            </b>
-
-                        </div>
+                </div>
 
 
-                        <div class="SecurityItem">
+                <div id="groupsContainer" class="GroupsContainer">
 
-                            <div class="SecurityIcon blue">
-                                🔗
-                            </div>
-
-                            <div>
-                                <strong>Account Linking</strong>
-
-                                <span>
-                                    Roblox and Discord account connection status.
-                                </span>
-                            </div>
-
-                            <b
-                                class="SecurityStatus"
-                                id="securityLinkStatus"
-                            >
-                                CHECKING
-                            </b>
-
-                        </div>
-
-
-                        <div class="SecurityItem">
-
-                            <div class="SecurityIcon orange">
-                                ◷
-                            </div>
-
-                            <div>
-                                <strong>Last Authentication</strong>
-
-                                <span>
-                                    Most recent successful authentication.
-                                </span>
-                            </div>
-
-                            <b id="securityLastLogin">
-                                Just now
-                            </b>
-
-                        </div>
-
+                    <div class="Loading">
+                        <div class="LoadingSpinner"></div>
+                        <span>Loading group memberships...</span>
                     </div>
 
-                </section>
+                </div>
+
+            </section>
 
 
-                <!-- ACCOUNT IDENTIFIERS -->
-                <section class="Panel">
+            <section class="Panel">
 
-                    <div class="PanelHeader">
+                <div class="PanelHeader">
 
-                        <div>
-                            <span class="PanelLabel">
-                                SYSTEM IDENTIFIERS
-                            </span>
-
-                            <h2>
-                                Account IDs
-                            </h2>
-                        </div>
-
-                        <span class="PanelID">
-                            ID-01
+                    <div>
+                        <span class="PanelLabel">
+                            PERSONNEL RECORD
                         </span>
 
+                        <h2>
+                            Warnings &amp; Disciplinary Record
+                        </h2>
                     </div>
 
+                    <span class="PanelID">
+                        DISC-01
+                    </span>
 
-                    <div class="InformationGrid">
-
-                        <div class="InformationItem">
-
-                            <span class="InformationLabel">
-                                ROBLOX USER ID
-                            </span>
-
-                            <strong
-                                class="Mono"
-                                id="infoRobloxId"
-                            >
-                                Not linked
-                            </strong>
-
-                        </div>
+                </div>
 
 
-                        <div class="InformationItem">
+                <div id="warningsContainer" class="WarningsContainer">
 
-                            <span class="InformationLabel">
-                                DISCORD USER ID
-                            </span>
-
-                            <strong
-                                class="Mono"
-                                id="infoDiscordId"
-                            >
-                                Not linked
-                            </strong>
-
-                        </div>
-
+                    <div class="Loading">
+                        <div class="LoadingSpinner"></div>
+                        <span>Loading personnel record...</span>
                     </div>
 
-                </section>
+                </div>
 
-            </div>
-
-
-            <!-- FOOTER -->
-            <footer class="Footer">
-
-                <span>
-                    SCPF SECURE NETWORK
-                </span>
-
-                <span>
-                    System status:
-                    <b>Operational</b>
-                </span>
-
-                <span>
-                    © SCP Foundation
-                </span>
-
-            </footer>
-
-        </main>
-
-    </div>
+            </section>
 
 
-    <script src="/script.js"></script>
+        </div>
+
+
+        <footer class="Footer">
+
+            <span>SCPF SECURE NETWORK</span>
+
+            <span>
+                System status:
+                <b>Operational</b>
+            </span>
+
+            <span>© SCP Foundation</span>
+
+        </footer>
+
+    </main>
+
+</div>
+
+<script src="/script.js"></script>
+<script src="/profile.js"></script>
 
 </body>
 </html>
