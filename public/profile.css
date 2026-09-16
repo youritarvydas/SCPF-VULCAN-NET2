@@ -1,402 +1,12 @@
-:root {
-    --bg: #080b10;
-    --sidebar: #0b0f15;
-    --panel: #0d1219;
-    --panel-hover: #111820;
-
-    --border: #202832;
-    --border-light: #2a333e;
-
-    --text: #e7ebef;
-    --muted: #7f8a97;
-
-    --blue: #4d9cff;
-    --green: #48d597;
-    --orange: #e5a451;
-    --red: #e05d67;
-    --purple: #9b7cff;
-}
-
-* {
-    box-sizing: border-box;
-}
-
-html,
-body {
-    margin: 0;
-    padding: 0;
-
-    width: 100%;
-    min-height: 100%;
-
-    background: var(--bg);
-    color: var(--text);
-
-    font-family:
-        Inter,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        sans-serif;
-}
-
-body {
-    min-height: 100vh;
-}
-
-button {
-    font-family: inherit;
-    cursor: pointer;
-}
-
-
-/* =========================
-   DASHBOARD
-========================= */
-
-.Dashboard {
-    display: flex;
-
-    min-height: 100vh;
-    width: 100%;
-}
-
-
-/* =========================
-   SIDEBAR
-========================= */
-
-.Sidebar {
-    width: 245px;
-    min-width: 245px;
-
-    display: flex;
-    flex-direction: column;
-
-    background: var(--sidebar);
-
-    border-right: 1px solid var(--border);
-
-    padding: 24px 14px;
-}
-
-.Logo {
-    display: flex;
-    align-items: center;
-
-    gap: 12px;
-
-    padding: 4px 12px 28px;
-}
-
-.LogoIcon {
-    width: 38px;
-    height: 38px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    border: 1px solid var(--border-light);
-
-    background: #10161e;
-
-    color: var(--blue);
-
-    font-size: 18px;
-}
-
-.Logo strong {
-    display: block;
-
-    font-size: 15px;
-    letter-spacing: 1.5px;
-}
-
-.Logo span {
-    display: block;
-
-    margin-top: 3px;
-
-    color: var(--muted);
-
-    font-size: 9px;
-    letter-spacing: 1.5px;
-}
-
-
-/* =========================
-   NAVIGATION
-========================= */
-
-.Sidebar nav {
-    display: flex;
-    flex-direction: column;
-
-    gap: 5px;
-}
-
-.NavItem {
-    position: relative;
-
-    display: flex;
-    align-items: center;
-
-    gap: 13px;
-
-    height: 43px;
-
-    padding: 0 13px;
-
-    color: var(--muted);
-
-    text-decoration: none;
-
-    font-size: 13px;
-
-    border: 1px solid transparent;
-
-    transition: 0.15s ease;
-}
-
-.NavItem span {
-    width: 18px;
-
-    text-align: center;
-
-    font-size: 15px;
-}
-
-.NavItem:hover {
-    color: var(--text);
-
-    background: #10161d;
-
-    border-color: var(--border);
-}
-
-.NavItem.active {
-    color: var(--text);
-
-    background: #111923;
-
-    border-color: var(--border-light);
-}
-
-.NavItem.active::before {
-    content: "";
-
-    position: absolute;
-
-    left: -1px;
-    top: 8px;
-    bottom: 8px;
-
-    width: 2px;
-
-    background: var(--blue);
-}
-
-
-/* =========================
-   SIDEBAR BOTTOM
-========================= */
-
-.SidebarBottom {
-    margin-top: auto;
-
-    display: flex;
-    flex-direction: column;
-
-    gap: 14px;
-}
-
-.SystemStatus {
-    display: flex;
-    align-items: center;
-
-    gap: 9px;
-
-    padding: 0 12px;
-
-    color: var(--muted);
-
-    font-size: 9px;
-    letter-spacing: 1px;
-}
-
-.SystemStatus span {
-    width: 7px;
-    height: 7px;
-
-    border-radius: 50%;
-
-    background: var(--green);
-
-    box-shadow: 0 0 8px rgba(72, 213, 151, 0.45);
-}
-
-.Logout {
-    width: 100%;
-    height: 40px;
-
-    background: transparent;
-
-    border: 1px solid var(--border);
-
-    color: var(--muted);
-
-    font-size: 12px;
-
-    transition: 0.15s ease;
-}
-
-.Logout:hover {
-    background: #11161d;
-
-    border-color: var(--border-light);
-
-    color: var(--text);
-}
-
-
-/* =========================
-   MAIN
-========================= */
-
-.Main {
-    flex: 1;
-
-    min-width: 0;
-
-    display: flex;
-    flex-direction: column;
-
-    background: var(--bg);
-}
-
-
-/* =========================
-   TOP BAR
-========================= */
-
-.TopBar {
-    height: 91px;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    padding: 0 36px;
-
-    border-bottom: 1px solid var(--border);
-
-    background: #090d12;
-}
-
-.SectionLabel {
-    display: block;
-
-    margin-bottom: 5px;
-
-    color: var(--blue);
-
-    font-size: 9px;
-    font-weight: 600;
-
-    letter-spacing: 1.7px;
-}
-
-.TopBar h1 {
-    margin: 0;
-
-    font-size: 25px;
-    font-weight: 500;
-
-    letter-spacing: -0.5px;
-}
-
-.Account {
-    display: flex;
-    align-items: center;
-
-    gap: 12px;
-}
-
-.AccountText {
-    text-align: right;
-}
-
-.AccountText strong {
-    display: block;
-
-    font-size: 12px;
-    font-weight: 600;
-}
-
-.AccountText span {
-    display: block;
-
-    margin-top: 3px;
-
-    color: var(--muted);
-
-    font-size: 10px;
-}
-
-.SmallAvatar {
-    width: 39px;
-    height: 39px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    overflow: hidden;
-
-    background: #111821;
-
-    border: 1px solid var(--border-light);
-
-    color: var(--muted);
-}
-
-.SmallAvatar img {
-    width: 100%;
-    height: 100%;
-
-    object-fit: cover;
-}
-
-
-/* =========================
-   CONTENT
-========================= */
-
-.Content {
-    width: 100%;
-    max-width: 1450px;
-
-    margin: 0 auto;
-
-    padding: 32px 36px 50px;
-}
-
-
-/* =========================
-   PROFILE HERO
-========================= */
-
 .ProfileHero {
+    min-height: 175px;
+    padding: 28px 30px;
+
     display: flex;
     align-items: center;
     justify-content: space-between;
 
     gap: 30px;
-
-    min-height: 185px;
-
-    padding: 30px;
 
     background:
         linear-gradient(
@@ -408,7 +18,6 @@ button {
     border: 1px solid var(--border);
 
     position: relative;
-
     overflow: hidden;
 }
 
@@ -418,21 +27,23 @@ button {
     position: absolute;
 
     right: -100px;
-    top: -140px;
+    top: -120px;
 
-    width: 330px;
-    height: 330px;
+    width: 300px;
+    height: 300px;
 
     border: 1px solid rgba(77, 156, 255, 0.08);
 
     transform: rotate(45deg);
 }
 
-.ProfileIdentity {
+.ProfileHeroIdentity {
     display: flex;
     align-items: center;
 
-    gap: 22px;
+    gap: 20px;
+
+    min-width: 0;
 
     position: relative;
     z-index: 1;
@@ -450,13 +61,13 @@ button {
 
     overflow: hidden;
 
-    background: #101821;
+    background: #111821;
 
     border: 1px solid var(--border-light);
 
     color: var(--muted);
 
-    font-size: 28px;
+    font-size: 30px;
 }
 
 .LargeAvatar img {
@@ -466,15 +77,23 @@ button {
     object-fit: cover;
 }
 
-.ProfileIdentityText h2 {
+.ProfileIdentity {
+    min-width: 0;
+}
+
+.ProfileIdentity h2 {
     margin: 0;
 
     font-size: 27px;
     font-weight: 500;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.ProfileIdentityText p {
-    margin: 6px 0 12px;
+.ProfileRank {
+    margin-top: 7px;
 
     color: var(--muted);
 
@@ -485,142 +104,60 @@ button {
     display: flex;
 
     gap: 7px;
+
+    margin-top: 12px;
 }
 
-.Badge {
-    display: inline-flex;
-    align-items: center;
-
+.ProfileBadge {
     padding: 5px 8px;
 
     font-size: 8px;
+
     letter-spacing: 0.8px;
 
     border: 1px solid;
 }
 
-.Badge.green {
+.ProfileBadge.green {
     color: var(--green);
 
     background: rgba(72, 213, 151, 0.06);
 
-    border-color: rgba(72, 213, 151, 0.18);
+    border-color: rgba(72, 213, 151, 0.2);
 }
 
-.Badge.blue {
+.ProfileBadge.blue {
     color: var(--blue);
 
     background: rgba(77, 156, 255, 0.06);
 
-    border-color: rgba(77, 156, 255, 0.18);
+    border-color: rgba(77, 156, 255, 0.2);
 }
 
-
-/* =========================
-   CLEARANCE
-========================= */
-
-.Clearance {
+.ProfileHero .Clearance {
     position: relative;
-    z-index: 1;
-
-    min-width: 150px;
-
-    padding: 20px;
-
-    border: 1px solid var(--border-light);
-
-    background: #0b1118;
-
-    text-align: center;
+    z-index: 2;
 }
 
-.Clearance span {
-    display: block;
+.ProfileGrid {
+    display: grid;
 
-    color: var(--muted);
+    grid-template-columns:
+        minmax(0, 1.5fr)
+        minmax(350px, 1fr);
 
-    font-size: 8px;
-    letter-spacing: 1.5px;
+    gap: 14px;
 }
 
-.Clearance strong {
-    display: block;
-
-    margin-top: 7px;
-
-    color: var(--green);
-
-    font-size: 13px;
-
-    letter-spacing: 1px;
-}
-
-
-/* =========================
-   PANEL
-========================= */
-
-.Panel {
+.ProfileGrid .Panel {
     margin-top: 14px;
-
-    background: var(--panel);
-
-    border: 1px solid var(--border);
 }
-
-.PanelHeader {
-    min-height: 76px;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    gap: 20px;
-
-    padding: 17px 20px;
-
-    border-bottom: 1px solid var(--border);
-}
-
-.PanelLabel {
-    display: block;
-
-    margin-bottom: 5px;
-
-    color: var(--blue);
-
-    font-size: 8px;
-    font-weight: 600;
-
-    letter-spacing: 1.5px;
-}
-
-.PanelHeader h2 {
-    margin: 0;
-
-    font-size: 15px;
-    font-weight: 500;
-}
-
-.PanelID {
-    color: #56616d;
-
-    font-family: monospace;
-
-    font-size: 9px;
-}
-
-
-/* =========================
-   INFORMATION GRID
-========================= */
 
 .InformationGrid {
     display: grid;
 
     grid-template-columns:
-        repeat(3, minmax(0, 1fr));
+        repeat(2, minmax(0, 1fr));
 
     gap: 1px;
 
@@ -628,69 +165,63 @@ button {
 }
 
 .InformationItem {
-    min-height: 85px;
+    min-height: 82px;
 
-    padding: 18px 20px;
+    padding: 17px;
 
-    background: var(--panel);
+    background: #0a0f15;
 }
 
-.InformationLabel {
+.InformationItem span {
     display: block;
 
     color: var(--muted);
 
     font-size: 8px;
 
-    letter-spacing: 1.4px;
+    letter-spacing: 1.2px;
 }
 
 .InformationItem strong {
     display: block;
 
-    margin-top: 8px;
+    margin-top: 9px;
 
-    font-size: 12px;
+    color: var(--text);
+
+    font-size: 13px;
 
     font-weight: 500;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
 }
 
-.StatusText {
-    color: var(--green);
-}
-
-.Mono {
-    color: #a5afba;
-
-    font-family: monospace;
-
-    font-size: 11px !important;
-}
-
-
-/* =========================
-   LINKED ACCOUNTS
-========================= */
-
-.AccountsConnection {
+.LinkedAccountsProfile {
     display: grid;
 
-    grid-template-columns: 1fr auto 1fr;
+    grid-template-columns: 1fr 50px 1fr;
 
     align-items: center;
 
-    gap: 25px;
+    gap: 10px;
 
-    padding: 25px;
+    padding: 18px;
 }
 
-.LinkedAccount {
+.LinkedAccountProfile {
+    min-width: 0;
+
     display: flex;
+
     align-items: center;
 
-    gap: 15px;
+    gap: 12px;
 
-    padding: 15px;
+    padding: 13px;
 
     background: #0a0f15;
 
@@ -698,12 +229,13 @@ button {
 }
 
 .ProfilePicture {
-    width: 58px;
-    height: 58px;
+    width: 48px;
+    height: 48px;
 
     flex-shrink: 0;
 
     display: flex;
+
     align-items: center;
     justify-content: center;
 
@@ -714,8 +246,6 @@ button {
     border: 1px solid var(--border-light);
 
     color: var(--muted);
-
-    font-size: 18px;
 }
 
 .ProfilePicture img {
@@ -725,22 +255,34 @@ button {
     object-fit: cover;
 }
 
+.AccountName {
+    min-width: 0;
+}
+
 .AccountName span {
     display: block;
 
-    color: var(--blue);
+    color: var(--muted);
 
     font-size: 8px;
 
-    letter-spacing: 1.4px;
+    letter-spacing: 1px;
 }
 
 .AccountName strong {
     display: block;
 
-    margin-top: 5px;
+    margin-top: 4px;
 
-    font-size: 13px;
+    font-size: 12px;
+
+    font-weight: 600;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
 }
 
 .AccountName small {
@@ -748,108 +290,132 @@ button {
 
     margin-top: 4px;
 
-    color: var(--muted);
+    color: #596572;
 
     font-size: 9px;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
 }
 
-.ConnectionLine {
+.ProfileConnection {
     display: flex;
-    flex-direction: column;
 
-    align-items: center;
-
-    gap: 7px;
+    justify-content: center;
 }
 
-.ConnectionIcon {
-    width: 36px;
-    height: 36px;
+.ProfileConnection .ConnectionIcon {
+    width: 34px;
+    height: 34px;
 
     display: flex;
+
     align-items: center;
     justify-content: center;
 
-    background: #101821;
+    background: #111923;
 
     border: 1px solid var(--border-light);
 
     font-size: 13px;
 }
 
-.ConnectionStatus {
-    color: var(--muted);
-
-    font-size: 7px;
-
-    letter-spacing: 1px;
-}
-
-
-/* =========================
-   SECURITY
-========================= */
-
-.SecurityList {
+.GroupsContainer {
     display: flex;
+
     flex-direction: column;
+
+    gap: 8px;
 
     padding: 12px;
 }
 
-.SecurityItem {
-    display: flex;
+.GroupCard {
+    display: grid;
+
+    grid-template-columns:
+        55px
+        minmax(180px, 1.5fr)
+        minmax(130px, 1fr)
+        100px;
+
     align-items: center;
 
-    gap: 14px;
+    gap: 15px;
 
-    padding: 16px;
+    padding: 12px 15px;
 
-    border-bottom: 1px solid var(--border);
+    background: #0a0f15;
+
+    border: 1px solid var(--border);
+
+    transition:
+        background 0.15s ease,
+        border-color 0.15s ease;
 }
 
-.SecurityItem:last-child {
-    border-bottom: 0;
+.GroupCard:hover {
+    background: var(--panel-hover);
+
+    border-color: var(--border-light);
 }
 
-.SecurityIcon {
-    width: 35px;
-    height: 35px;
+.GroupCard.mainGroup {
+    border-color: #25476b;
 
-    flex-shrink: 0;
+    background:
+        linear-gradient(
+            90deg,
+            rgba(77, 156, 255, 0.06),
+            #0a0f15
+        );
+}
+
+.GroupIcon {
+    width: 45px;
+    height: 45px;
 
     display: flex;
+
     align-items: center;
     justify-content: center;
 
+    overflow: hidden;
+
+    background: #111821;
+
     border: 1px solid var(--border-light);
-
-    background: #101821;
 }
 
-.SecurityIcon.green {
-    color: var(--green);
+.GroupIcon img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
 }
 
-.SecurityIcon.blue {
-    color: var(--blue);
+.GroupInformation {
+    min-width: 0;
 }
 
-.SecurityIcon.orange {
-    color: var(--orange);
-}
-
-.SecurityItem div:nth-child(2) {
-    flex: 1;
-}
-
-.SecurityItem strong {
+.GroupInformation strong {
     display: block;
 
-    font-size: 11px;
+    font-size: 12px;
+
+    font-weight: 600;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
 }
 
-.SecurityItem span {
+.GroupInformation small {
     display: block;
 
     margin-top: 4px;
@@ -859,125 +425,221 @@ button {
     font-size: 9px;
 }
 
-.SecurityStatus {
-    color: var(--green);
+.GroupRole {
+    min-width: 0;
+}
+
+.GroupRole span {
+    display: block;
+
+    color: var(--muted);
 
     font-size: 8px;
 
     letter-spacing: 0.8px;
 }
 
+.GroupRole strong {
+    display: block;
 
-/* =========================
-   FOOTER
-========================= */
+    margin-top: 5px;
 
-.Footer {
-    margin-top: auto;
+    font-size: 11px;
 
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    font-weight: 500;
 
-    gap: 20px;
+    overflow: hidden;
 
-    padding: 18px 36px;
+    text-overflow: ellipsis;
 
-    border-top: 1px solid var(--border);
-
-    color: #58636f;
-
-    font-size: 9px;
-
-    letter-spacing: 0.4px;
+    white-space: nowrap;
 }
 
-.Footer b {
-    color: var(--green);
+.GroupRank {
+    text-align: right;
+}
+
+.GroupRank span {
+    display: block;
+
+    color: var(--muted);
+
+    font-size: 8px;
+
+    letter-spacing: 0.8px;
+}
+
+.GroupRank strong {
+    display: block;
+
+    margin-top: 5px;
+
+    color: var(--blue);
+
+    font-size: 11px;
 
     font-weight: 500;
 }
 
+.MainGroupBadge {
+    display: inline-block;
 
-/* =========================
-   RESPONSIVE
-========================= */
+    margin-top: 6px;
 
-@media (max-width: 900px) {
+    padding: 3px 6px;
 
-    .InformationGrid {
+    color: var(--blue);
+
+    background: rgba(77, 156, 255, 0.06);
+
+    border: 1px solid rgba(77, 156, 255, 0.15);
+
+    font-size: 7px;
+
+    letter-spacing: 0.7px;
+}
+
+.WarningsContainer {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+
+    padding: 12px;
+}
+
+.WarningCard {
+    display: grid;
+
+    grid-template-columns:
+        45px
+        minmax(0, 1fr)
+        auto;
+
+    align-items: center;
+
+    gap: 14px;
+
+    padding: 15px;
+
+    background: #0a0f15;
+
+    border: 1px solid var(--border);
+}
+
+.WarningIcon {
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    color: var(--orange);
+
+    background: rgba(229, 164, 81, 0.06);
+
+    border: 1px solid rgba(229, 164, 81, 0.18);
+
+    font-size: 15px;
+}
+
+.WarningInformation {
+    min-width: 0;
+}
+
+.WarningInformation strong {
+    display: block;
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+.WarningInformation p {
+    margin: 5px 0 0;
+
+    color: var(--muted);
+
+    font-size: 10px;
+
+    line-height: 1.5;
+}
+
+.WarningMeta {
+    text-align: right;
+}
+
+.WarningMeta span {
+    display: block;
+
+    color: var(--muted);
+
+    font-size: 8px;
+}
+
+.WarningMeta strong {
+    display: block;
+
+    margin-top: 5px;
+
+    color: var(--orange);
+
+    font-size: 9px;
+}
+
+.EmptyRecord {
+    padding: 35px 20px;
+
+    text-align: center;
+
+    color: var(--muted);
+
+    font-size: 11px;
+}
+
+.EmptyRecord strong {
+    display: block;
+
+    margin-bottom: 6px;
+
+    color: var(--text);
+
+    font-size: 12px;
+}
+
+.ProfileError {
+    padding: 30px;
+
+    text-align: center;
+
+    color: var(--red);
+
+    font-size: 11px;
+}
+
+@media (max-width: 1000px) {
+
+    .ProfileGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .GroupCard {
         grid-template-columns:
-            repeat(2, minmax(0, 1fr));
+            55px
+            1fr
+            1fr;
     }
 
-    .AccountsConnection {
-        grid-template-columns: 1fr;
-
-        gap: 12px;
-    }
-
-    .ConnectionLine {
-        flex-direction: row;
-
-        justify-content: center;
+    .GroupRank {
+        text-align: left;
     }
 
 }
 
-@media (max-width: 750px) {
-
-    .Sidebar {
-        width: 70px;
-        min-width: 70px;
-
-        padding: 18px 8px;
-    }
-
-    .Logo {
-        justify-content: center;
-
-        padding: 4px 0 25px;
-    }
-
-    .Logo > div:last-child {
-        display: none;
-    }
-
-    .NavItem {
-        justify-content: center;
-
-        padding: 0;
-
-        font-size: 0;
-    }
-
-    .NavItem span {
-        width: auto;
-    }
-
-    .SystemStatus {
-        justify-content: center;
-
-        padding: 0;
-
-        font-size: 0;
-    }
-
-    .Logout {
-        font-size: 0;
-    }
-
-    .Logout:first-letter {
-        font-size: 15px;
-    }
-
-    .TopBar {
-        padding: 0 20px;
-    }
-
-    .Content {
-        padding: 20px;
-    }
+@media (max-width: 700px) {
 
     .ProfileHero {
         align-items: flex-start;
@@ -989,35 +651,31 @@ button {
         grid-template-columns: 1fr;
     }
 
-    .Footer {
-        flex-direction: column;
-
-        align-items: flex-start;
-
-        padding: 18px 20px;
+    .LinkedAccountsProfile {
+        grid-template-columns: 1fr;
     }
 
-}
-
-@media (max-width: 500px) {
-
-    .AccountText {
+    .ProfileConnection {
         display: none;
     }
 
-    .ProfileIdentity {
-        align-items: flex-start;
-
-        flex-direction: column;
+    .GroupCard {
+        grid-template-columns: 50px 1fr;
     }
 
-    .ProfileHero {
-        padding: 22px;
+    .GroupRole,
+    .GroupRank {
+        grid-column: 2;
     }
 
-    .LargeAvatar {
-        width: 80px;
-        height: 80px;
+    .WarningCard {
+        grid-template-columns: 40px 1fr;
+    }
+
+    .WarningMeta {
+        grid-column: 2;
+
+        text-align: left;
     }
 
 }
