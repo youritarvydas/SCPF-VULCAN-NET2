@@ -1213,69 +1213,6 @@ app.get("/api/profile", async (req, res) => {
 
         const robloxId = String(req.session.roblox.id)
 
-        console.log("[PROFILE] Roblox user ID:", robloxId)
-
-        const FOUNDATION_GROUP_ID = "14825724"
-
-        const [
-            userResponse,
-            groupsResponse,
-            allies
-        ] = await Promise.all([
-            fetch(
-                `https://users.roblox.com/v1/users/${robloxId}`
-            ),
-
-            fetch(
-                `https://groups.roblox.com/v1/users/${robloxId}/groups/roles`
-            ),
-
-            getGroupAllies(FOUNDATION_GROUP_ID)
-        ])
-
-        const userData = await userResponse.json()
-        const groupsData = await groupsResponse.json()
-
-        if (!userResponse.ok) {
-            console.error(
-                "[PROFILE] User API error:",
-                userData
-            )
-
-            return res.status(userResponse.status).json({
-                error: "Failed to retrieve Roblox user.",
-                details: userData
-            })
-        }
-
-        if (!groupsResponse.ok) {
-            console.error(
-                "[PROFILE] Groups API error:",
-                groupsData
-            )
-
-            return res.status(groupsResponse.status).json({
-                error: "Failed to retrieve Roblox groups.",
-                details: groupsData
-            })
-        }
-
-        const foundationGroup =
-            groupsData.data.find(
-                entry =>
-                    String(entry.group.id) ===
-                    FOUNDATION_GROUP_ID
-            )
-app.get("/api/profile", async (req, res) => {
-    try {
-        if (!req.session.roblox) {
-            return res.status(401).json({
-                error: "No Roblox account linked to this session"
-            })
-        }
-
-        const robloxId = String(req.session.roblox.id)
-
         const configuredGroupIds = [
             ...new Set(
                 String(process.env.SCPF_PROFILE_GROUP_IDS || "")
