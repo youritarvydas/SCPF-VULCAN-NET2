@@ -1,0 +1,1023 @@
+:root {
+    --bg: #080b10;
+    --sidebar: #0b0f15;
+    --panel: #0d1219;
+    --panel-hover: #111820;
+
+    --border: #202832;
+    --border-light: #2a333e;
+
+    --text: #e7ebef;
+    --muted: #7f8a97;
+
+    --blue: #4d9cff;
+    --green: #48d597;
+    --orange: #e5a451;
+    --red: #e05d67;
+    --purple: #9b7cff;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+
+    width: 100%;
+    min-height: 100%;
+
+    background: var(--bg);
+    color: var(--text);
+
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+}
+
+body {
+    min-height: 100vh;
+}
+
+button {
+    font-family: inherit;
+    cursor: pointer;
+}
+
+
+/* =========================
+   DASHBOARD
+========================= */
+
+.Dashboard {
+    display: flex;
+
+    min-height: 100vh;
+    width: 100%;
+}
+
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.Sidebar {
+    width: 245px;
+    min-width: 245px;
+
+    display: flex;
+    flex-direction: column;
+
+    background: var(--sidebar);
+
+    border-right: 1px solid var(--border);
+
+    padding: 24px 14px;
+}
+
+.Logo {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 4px 12px 28px;
+}
+
+.LogoIcon {
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid var(--border-light);
+
+    background: #10161e;
+
+    color: var(--blue);
+
+    font-size: 18px;
+}
+
+.Logo strong {
+    display: block;
+
+    font-size: 15px;
+    letter-spacing: 1.5px;
+}
+
+.Logo span {
+    display: block;
+
+    margin-top: 3px;
+
+    color: var(--muted);
+
+    font-size: 9px;
+    letter-spacing: 1.5px;
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+.Sidebar nav {
+    display: flex;
+    flex-direction: column;
+
+    gap: 5px;
+}
+
+.NavItem {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+    gap: 13px;
+
+    height: 43px;
+
+    padding: 0 13px;
+
+    color: var(--muted);
+
+    text-decoration: none;
+
+    font-size: 13px;
+
+    border: 1px solid transparent;
+
+    transition: 0.15s ease;
+}
+
+.NavItem span {
+    width: 18px;
+
+    text-align: center;
+
+    font-size: 15px;
+}
+
+.NavItem:hover {
+    color: var(--text);
+
+    background: #10161d;
+
+    border-color: var(--border);
+}
+
+.NavItem.active {
+    color: var(--text);
+
+    background: #111923;
+
+    border-color: var(--border-light);
+}
+
+.NavItem.active::before {
+    content: "";
+
+    position: absolute;
+
+    left: -1px;
+    top: 8px;
+    bottom: 8px;
+
+    width: 2px;
+
+    background: var(--blue);
+}
+
+
+/* =========================
+   SIDEBAR BOTTOM
+========================= */
+
+.SidebarBottom {
+    margin-top: auto;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 14px;
+}
+
+.SystemStatus {
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+    padding: 0 12px;
+
+    color: var(--muted);
+
+    font-size: 9px;
+    letter-spacing: 1px;
+}
+
+.SystemStatus span {
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: var(--green);
+
+    box-shadow: 0 0 8px rgba(72, 213, 151, 0.45);
+}
+
+.Logout {
+    width: 100%;
+    height: 40px;
+
+    background: transparent;
+
+    border: 1px solid var(--border);
+
+    color: var(--muted);
+
+    font-size: 12px;
+
+    transition: 0.15s ease;
+}
+
+.Logout:hover {
+    background: #11161d;
+
+    border-color: var(--border-light);
+
+    color: var(--text);
+}
+
+
+/* =========================
+   MAIN
+========================= */
+
+.Main {
+    flex: 1;
+
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    background: var(--bg);
+}
+
+
+/* =========================
+   TOP BAR
+========================= */
+
+.TopBar {
+    height: 91px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 36px;
+
+    border-bottom: 1px solid var(--border);
+
+    background: #090d12;
+}
+
+.SectionLabel {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: var(--blue);
+
+    font-size: 9px;
+    font-weight: 600;
+
+    letter-spacing: 1.7px;
+}
+
+.TopBar h1 {
+    margin: 0;
+
+    font-size: 25px;
+    font-weight: 500;
+
+    letter-spacing: -0.5px;
+}
+
+.Account {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+}
+
+.AccountText {
+    text-align: right;
+}
+
+.AccountText strong {
+    display: block;
+
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.AccountText span {
+    display: block;
+
+    margin-top: 3px;
+
+    color: var(--muted);
+
+    font-size: 10px;
+}
+
+.SmallAvatar {
+    width: 39px;
+    height: 39px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+
+    background: #111821;
+
+    border: 1px solid var(--border-light);
+
+    color: var(--muted);
+}
+
+.SmallAvatar img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+
+/* =========================
+   CONTENT
+========================= */
+
+.Content {
+    width: 100%;
+    max-width: 1450px;
+
+    margin: 0 auto;
+
+    padding: 32px 36px 50px;
+}
+
+
+/* =========================
+   PROFILE HERO
+========================= */
+
+.ProfileHero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 30px;
+
+    min-height: 185px;
+
+    padding: 30px;
+
+    background:
+        linear-gradient(
+            110deg,
+            #0e151d,
+            #0b1118
+        );
+
+    border: 1px solid var(--border);
+
+    position: relative;
+
+    overflow: hidden;
+}
+
+.ProfileHero::after {
+    content: "";
+
+    position: absolute;
+
+    right: -100px;
+    top: -140px;
+
+    width: 330px;
+    height: 330px;
+
+    border: 1px solid rgba(77, 156, 255, 0.08);
+
+    transform: rotate(45deg);
+}
+
+.ProfileIdentity {
+    display: flex;
+    align-items: center;
+
+    gap: 22px;
+
+    position: relative;
+    z-index: 1;
+}
+
+.LargeAvatar {
+    width: 100px;
+    height: 100px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+
+    background: #101821;
+
+    border: 1px solid var(--border-light);
+
+    color: var(--muted);
+
+    font-size: 28px;
+}
+
+.LargeAvatar img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+.ProfileIdentityText h2 {
+    margin: 0;
+
+    font-size: 27px;
+    font-weight: 500;
+}
+
+.ProfileIdentityText p {
+    margin: 6px 0 12px;
+
+    color: var(--muted);
+
+    font-size: 12px;
+}
+
+.ProfileBadges {
+    display: flex;
+
+    gap: 7px;
+}
+
+.Badge {
+    display: inline-flex;
+    align-items: center;
+
+    padding: 5px 8px;
+
+    font-size: 8px;
+    letter-spacing: 0.8px;
+
+    border: 1px solid;
+}
+
+.Badge.green {
+    color: var(--green);
+
+    background: rgba(72, 213, 151, 0.06);
+
+    border-color: rgba(72, 213, 151, 0.18);
+}
+
+.Badge.blue {
+    color: var(--blue);
+
+    background: rgba(77, 156, 255, 0.06);
+
+    border-color: rgba(77, 156, 255, 0.18);
+}
+
+
+/* =========================
+   CLEARANCE
+========================= */
+
+.Clearance {
+    position: relative;
+    z-index: 1;
+
+    min-width: 150px;
+
+    padding: 20px;
+
+    border: 1px solid var(--border-light);
+
+    background: #0b1118;
+
+    text-align: center;
+}
+
+.Clearance span {
+    display: block;
+
+    color: var(--muted);
+
+    font-size: 8px;
+    letter-spacing: 1.5px;
+}
+
+.Clearance strong {
+    display: block;
+
+    margin-top: 7px;
+
+    color: var(--green);
+
+    font-size: 13px;
+
+    letter-spacing: 1px;
+}
+
+
+/* =========================
+   PANEL
+========================= */
+
+.Panel {
+    margin-top: 14px;
+
+    background: var(--panel);
+
+    border: 1px solid var(--border);
+}
+
+.PanelHeader {
+    min-height: 76px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding: 17px 20px;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.PanelLabel {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: var(--blue);
+
+    font-size: 8px;
+    font-weight: 600;
+
+    letter-spacing: 1.5px;
+}
+
+.PanelHeader h2 {
+    margin: 0;
+
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.PanelID {
+    color: #56616d;
+
+    font-family: monospace;
+
+    font-size: 9px;
+}
+
+
+/* =========================
+   INFORMATION GRID
+========================= */
+
+.InformationGrid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 1px;
+
+    background: var(--border);
+}
+
+.InformationItem {
+    min-height: 85px;
+
+    padding: 18px 20px;
+
+    background: var(--panel);
+}
+
+.InformationLabel {
+    display: block;
+
+    color: var(--muted);
+
+    font-size: 8px;
+
+    letter-spacing: 1.4px;
+}
+
+.InformationItem strong {
+    display: block;
+
+    margin-top: 8px;
+
+    font-size: 12px;
+
+    font-weight: 500;
+}
+
+.StatusText {
+    color: var(--green);
+}
+
+.Mono {
+    color: #a5afba;
+
+    font-family: monospace;
+
+    font-size: 11px !important;
+}
+
+
+/* =========================
+   LINKED ACCOUNTS
+========================= */
+
+.AccountsConnection {
+    display: grid;
+
+    grid-template-columns: 1fr auto 1fr;
+
+    align-items: center;
+
+    gap: 25px;
+
+    padding: 25px;
+}
+
+.LinkedAccount {
+    display: flex;
+    align-items: center;
+
+    gap: 15px;
+
+    padding: 15px;
+
+    background: #0a0f15;
+
+    border: 1px solid var(--border);
+}
+
+.ProfilePicture {
+    width: 58px;
+    height: 58px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+
+    background: #111821;
+
+    border: 1px solid var(--border-light);
+
+    color: var(--muted);
+
+    font-size: 18px;
+}
+
+.ProfilePicture img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+.AccountName span {
+    display: block;
+
+    color: var(--blue);
+
+    font-size: 8px;
+
+    letter-spacing: 1.4px;
+}
+
+.AccountName strong {
+    display: block;
+
+    margin-top: 5px;
+
+    font-size: 13px;
+}
+
+.AccountName small {
+    display: block;
+
+    margin-top: 4px;
+
+    color: var(--muted);
+
+    font-size: 9px;
+}
+
+.ConnectionLine {
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+
+    gap: 7px;
+}
+
+.ConnectionIcon {
+    width: 36px;
+    height: 36px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #101821;
+
+    border: 1px solid var(--border-light);
+
+    font-size: 13px;
+}
+
+.ConnectionStatus {
+    color: var(--muted);
+
+    font-size: 7px;
+
+    letter-spacing: 1px;
+}
+
+
+/* =========================
+   SECURITY
+========================= */
+
+.SecurityList {
+    display: flex;
+    flex-direction: column;
+
+    padding: 12px;
+}
+
+.SecurityItem {
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+
+    padding: 16px;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.SecurityItem:last-child {
+    border-bottom: 0;
+}
+
+.SecurityIcon {
+    width: 35px;
+    height: 35px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid var(--border-light);
+
+    background: #101821;
+}
+
+.SecurityIcon.green {
+    color: var(--green);
+}
+
+.SecurityIcon.blue {
+    color: var(--blue);
+}
+
+.SecurityIcon.orange {
+    color: var(--orange);
+}
+
+.SecurityItem div:nth-child(2) {
+    flex: 1;
+}
+
+.SecurityItem strong {
+    display: block;
+
+    font-size: 11px;
+}
+
+.SecurityItem span {
+    display: block;
+
+    margin-top: 4px;
+
+    color: var(--muted);
+
+    font-size: 9px;
+}
+
+.SecurityStatus {
+    color: var(--green);
+
+    font-size: 8px;
+
+    letter-spacing: 0.8px;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+.Footer {
+    margin-top: auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding: 18px 36px;
+
+    border-top: 1px solid var(--border);
+
+    color: #58636f;
+
+    font-size: 9px;
+
+    letter-spacing: 0.4px;
+}
+
+.Footer b {
+    color: var(--green);
+
+    font-weight: 500;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 900px) {
+
+    .InformationGrid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .AccountsConnection {
+        grid-template-columns: 1fr;
+
+        gap: 12px;
+    }
+
+    .ConnectionLine {
+        flex-direction: row;
+
+        justify-content: center;
+    }
+
+}
+
+@media (max-width: 750px) {
+
+    .Sidebar {
+        width: 70px;
+        min-width: 70px;
+
+        padding: 18px 8px;
+    }
+
+    .Logo {
+        justify-content: center;
+
+        padding: 4px 0 25px;
+    }
+
+    .Logo > div:last-child {
+        display: none;
+    }
+
+    .NavItem {
+        justify-content: center;
+
+        padding: 0;
+
+        font-size: 0;
+    }
+
+    .NavItem span {
+        width: auto;
+    }
+
+    .SystemStatus {
+        justify-content: center;
+
+        padding: 0;
+
+        font-size: 0;
+    }
+
+    .Logout {
+        font-size: 0;
+    }
+
+    .Logout:first-letter {
+        font-size: 15px;
+    }
+
+    .TopBar {
+        padding: 0 20px;
+    }
+
+    .Content {
+        padding: 20px;
+    }
+
+    .ProfileHero {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+    .InformationGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .Footer {
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        padding: 18px 20px;
+    }
+
+}
+
+@media (max-width: 500px) {
+
+    .AccountText {
+        display: none;
+    }
+
+    .ProfileIdentity {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+    .ProfileHero {
+        padding: 22px;
+    }
+
+    .LargeAvatar {
+        width: 80px;
+        height: 80px;
+    }
+
+}
