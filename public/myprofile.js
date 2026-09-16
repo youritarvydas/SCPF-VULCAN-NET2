@@ -1,8 +1,8 @@
-
 document.addEventListener("DOMContentLoaded", async function () {
 
 
-const warning = document.getElementById("warning");
+const warning =
+    document.getElementById("warning");
 
 const profileAvatar =
     document.getElementById("profileAvatar");
@@ -55,21 +55,14 @@ const foundationMember =
 const foundationStatus =
     document.getElementById("foundationStatus");
 
-const groupsList =
-    document.getElementById("groupsList");
-
 const alliesList =
     document.getElementById("alliesList");
-
-const groupCount =
-    document.getElementById("groupCount");
 
 const allyCount =
     document.getElementById("allyCount");
 
 const logoutButton =
     document.getElementById("logoutButton");
-
 
 try {
 
@@ -78,28 +71,20 @@ try {
             credentials: "include"
         });
 
-
     if (!response.ok) {
-
         throw new Error(
             "Failed to load profile."
         );
-
     }
-
 
     const data =
         await response.json();
 
-
     if (!data.success) {
-
         throw new Error(
             data.error || "Failed to load profile."
         );
-
     }
-
 
     const user =
         data.user;
@@ -107,14 +92,9 @@ try {
     const foundation =
         data.foundation;
 
-    const groups =
-        data.groups || [];
-
     const allies =
         data.allies || [];
 
-
-    /* USER */
 
     profileAvatar.src =
         user.avatar || "";
@@ -126,7 +106,9 @@ try {
         user.username || "Unknown";
 
     profileDisplayName.textContent =
-        user.displayName || user.username || "Unknown";
+        user.displayName ||
+        user.username ||
+        "Unknown";
 
     profileUserId.textContent =
         user.id;
@@ -147,8 +129,6 @@ try {
     accountUserId.textContent =
         user.id;
 
-
-    /* FOUNDATION */
 
     if (foundation && foundation.member) {
 
@@ -205,63 +185,6 @@ try {
     }
 
 
-    /* GROUPS */
-
-    groupCount.textContent =
-        `${groups.length} GROUP${groups.length === 1 ? "" : "S"}`;
-
-
-    groupsList.innerHTML = "";
-
-
-    if (groups.length === 0) {
-
-        groupsList.innerHTML =
-            `<div class="empty">
-                This user is not currently in any groups.
-            </div>`;
-
-    } else {
-
-        groups.forEach(function (group) {
-
-            const entry =
-                document.createElement("div");
-
-            entry.className =
-                "group-entry";
-
-
-            entry.innerHTML = `
-                <img
-                    src="${escapeHTML(group.icon)}"
-                    alt=""
-                >
-
-                <div class="group-entry-content">
-
-                    <strong>
-                        ${escapeHTML(group.name)}
-                    </strong>
-
-                    <span>
-                        ${escapeHTML(group.role)}
-                        · Group ID ${escapeHTML(String(group.id))}
-                    </span>
-
-                </div>
-            `;
-
-
-            groupsList.appendChild(entry);
-
-        });
-
-    }
-
-
-    /* ALLIES */
-
     allyCount.textContent =
         `${allies.length} ALL${allies.length === 1 ? "Y" : "IES"}`;
 
@@ -285,7 +208,6 @@ try {
             entry.className =
                 "group-entry";
 
-
             entry.innerHTML = `
                 <img
                     src="${escapeHTML(ally.icon)}"
@@ -305,7 +227,6 @@ try {
                 </div>
             `;
 
-
             alliesList.appendChild(entry);
 
         });
@@ -319,17 +240,12 @@ try {
         error
     );
 
-
-    groupsList.innerHTML =
-        `<div class="empty error">
-            Failed to load Roblox profile information.
-        </div>`;
-
-
-    alliesList.innerHTML =
-        `<div class="empty error">
-            Failed to load allied groups.
-        </div>`;
+    if (alliesList) {
+        alliesList.innerHTML =
+            `<div class="empty error">
+                Failed to load allied groups.
+            </div>`;
+    }
 
 }
 
