@@ -9,6 +9,7 @@ const { Pool } = require("pg")
 
 const discordConnect = require("./DiscordConnect")
 const discordBot = require("./Discordbot")
+const { getWarnings } = require("./personnelStore")
 const { sendDirectMessage } = discordBot
 
 const {
@@ -98,6 +99,237 @@ app.use(
 		}
 	})
 )
+
+const MAIN_GROUP_ID =
+    String(process.env.SCPF_MAIN_GROUP_ID || "14825724")
+
+
+async function robloxRequest(url) {
+
+    const response = await fetch(url)
+
+    if (!response.ok) {
+        const text = await response.text()
+
+        throw new Error(
+            `Roblox API ${response.status}: ${text}`
+        )
+    }
+
+    return response.json()
+}
+
+
+async function getRobloxAvatar(userId) {
+
+    try {
+
+        const data = await robloxRequest(
+            `https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${userId}&size=150x150&format=Png&isCircular=false`
+        )
+
+        return data.data?.[0]?.imageUrl || null
+
+    } catch {
+
+        return null
+    }
+}
+
+
+async function getGroupIcons(groups) {
+
+    if (!groups.length) {
+        return new Map()
+    }
+
+    const ids = groups
+        .map(group => group.group.id)
+        .join(",")
+
+    try {
+
+        const data = await robloxRequest(
+            `https://thumbnails.roblox.com/v1/groups/icons?groupIds=${ids}&size=150x150&format=Png&isCircular=false`
+        )
+
+        const icons = new Map()
+
+        for (const item of data.data || []) {
+
+            icons.set(
+                String(item.targetId),
+                item.imageUrl
+            )
+
+        }
+
+        return icons
+
+    } catch {
+
+        return new Map()
+    }
+}
+
+
+app.get("/api/profile", async (req, res) => {
+
+    try {
+
+        if (!req.session) {
+            return res.status(401).json({
+                error: "No session"
+            })
+        }
+
+
+        const robloxId =
+            req.session.robloxId ||
+            req.session.roblox_id ||
+            req.session.user?.robloxId ||
+            req.session.user?.roblox_id
+
+
+        if (!robloxId) {
+
+            return res.status(401).json({
+                error: "No Roblox account linked to this session"
+            })
+        }
+
+
+        const user =
+            await robloxRequest(
+                `https://users.roblox.com/v1/users/${encodeURIComponent(robloxId)}`
+            )
+
+
+        const groupsResponse =
+            await robloxRequest(
+                `https://groups.roblox.com/v2/users/${encodeURIComponent(robloxId)}/groups/roles`
+            )
+
+
+        const groups =
+            groupsResponse.data || []
+
+
+        const icons =
+            await getGroupIcons(groups)
+
+
+        for (const group of groups) {
+
+            group.group.icon =
+                icons.get(
+                    String(group.group.id)
+                ) || null
+        }
+
+
+        const mainGroup =
+            groups.find(
+                group =>
+                    String(group.group.id) ===
+                    MAIN_GROUP_ID
+            ) || null
+
+
+        const avatar =
+            await getRobloxAvatar(robloxId)
+
+
+        let discord = null
+
+
+        try {
+
+            const {
+                getLinkByRobloxId
+            } = require("./accountStore")
+
+            const link =
+                getLinkByRobloxId(
+                    String(robloxId)
+                )
+
+            if (link) {
+
+                discord = {
+                    id:
+                        link.discord_id ||
+                        link.discordId ||
+                        null,
+
+                    username:
+                        link.discord_username ||
+                        link.discordUsername ||
+                        null,
+
+                    avatar:
+                        link.discord_avatar ||
+                        link.discordAvatar ||
+                        null
+                }
+
+            }
+
+        } catch (error) {
+
+            console.error(
+                "Discord link lookup failed:",
+                error
+            )
+
+        }
+
+
+        const warnings =
+            getWarnings(robloxId)
+
+
+        res.json({
+
+            user: {
+                id: String(user.id),
+                username: user.name,
+                displayName: user.displayName,
+                avatar
+            },
+
+            mainGroup,
+
+            groups,
+
+            discord,
+
+            warnings,
+
+            clearance:
+                req.session.clearance ||
+                "LEVEL 1",
+
+            lastLogin:
+                req.session.lastLogin ||
+                null
+
+        })
+
+    } catch (error) {
+
+        console.error(
+            "Profile API error:",
+            error
+        )
+
+        res.status(500).json({
+            error: "Failed to load personnel profile"
+        })
+
+    }
+
+})
 
 app.use(discordConnect)
 
