@@ -1266,39 +1266,187 @@ app.get("/api/profile", async (req, res) => {
                     String(entry.group.id) ===
                     FOUNDATION_GROUP_ID
             )
-
-        const groups =
-            groupsData.data.map(entry => ({
-                id: entry.group.id,
-                name: entry.group.name,
-                icon: null,
-
-                role: {
-                    id: entry.role.id,
-                    name: entry.role.name,
-                    rank: entry.role.rank
-                }
-            }))
-
-        let foundation = {
-            member: false,
-
-            group: {
-                id: FOUNDATION_GROUP_ID,
-                name: "SCPF Foundation",
-                icon: null
-            },
-
-            role: null
+app.get("/api/profile", async (req, res) => {
+    try {
+        if (!req.session.roblox) {
+            return res.status(401).json({
+                error: "No Roblox account linked to this session"
+            })
         }
 
-        if (foundationGroup) {
-            foundation.member = true
+        const robloxId = String(req.session.roblox.id)
 
-            foundation.role = {
-                id: foundationGroup.role.id,
-                name: foundationGroup.role.name,
-                rank: foundationGroup.role.rank
+        const configuredGroupIds = [
+            ...new Set(
+                String(process.env.SCPF_PROFILE_GROUP_IDS || "")
+                    .split(",")
+                    .map(id => id.trim())
+                    .filter(id => /^\d+$/.test(id))
+            )
+        ]
+
+        if (!configuredGroupIds.length) {
+            return res.status(500).json({
+                error: "No SCPF_PROFILE_GROUP_IDS configured."
+            })
+        }
+
+        console.log("[PROFILE] Roblox user ID:", robloxId)
+        console.log(
+            "[PROFILE] Configured groups:",
+            configuredGroupIds.join(", ")
+        )
+
+        const [
+            userResponse,
+            groupsResponse
+        ] = await Promise.all([
+            fetch(
+                `https://users.roblox.com/v1/users/${robloxId}`
+            ),
+
+            fetch(
+                `https://groups.roblox.com/v1/users/${robloxId}/groups/roles`
+            )
+        ])
+
+        const userData = await userResponse.json()
+        const groupsData = await groupsResponse.json()
+
+        if (!userResponse.ok) {
+            console.error(
+                "[PROFILE] User API error:",
+                userData
+            )
+
+            return res.status(userResponse.status).json({
+                error: "Failed to retrieve Roblox user.",
+                details: userData
+            })
+        }
+
+        if (!groupsResponse.ok) {
+            console.error(
+                "[PROFILE] Groups API error:",
+                groupsData
+            )
+
+            return res.status(groupsResponse.status).json({
+                error: "Failed to retrieve Roblox groups.",
+                details: groupsData
+            })
+        }
+
+        const userGroups = groupsData.data || []
+
+        const groups = await Promise.all(
+            configuredGroupIds.map(async groupId => {
+                try {
+                    const groupResponse = await fetch(
+                        `https://groups.roblox.com/v1/groups/${groupId}`
+                    )
+
+                    if (!groupResponse.ok) {
+                        console.error(
+                            `[PROFILE] Failed to retrieve group ${groupId}`
+                        )
+
+                        return {
+                            id: Number(groupId),
+                            name: "Unknown Group",
+                            icon: null,
+                            member: false,
+                            role: null
+                        }
+                    }
+
+                    const groupData =
+                        await groupResponse.json()
+
+                    const membership =
+                        userGroups.find(
+                            entry =>
+                                String(entry.group.id) ===
+                                String(groupId)
+                        )
+
+                    return {
+                        id: groupData.id,
+                        name: groupData.name,
+                        description:
+                            groupData.description || "",
+                        member: !!membership,
+                        role: membership
+                            ? {
+                                id: membership.role.id,
+                                name: membership.role.name,
+                                rank: membership.role.rank
+                            }
+                            : null,
+                        memberCount:
+                            groupData.memberCount || 0,
+                        icon: null
+                    }
+                } catch (error) {
+                    console.error(
+                        `[PROFILE] Error retrieving group ${groupId}:`,
+                        error
+                    )
+
+                    return {
+                        id: Number(groupId),
+                        name: "Unknown Group",
+                        icon: null,
+                        member: false,
+                        role: null
+                    }
+                }
+            })
+        )
+
+        const groupsWithIcons = await getGroupIcons(
+            groups.map(group => ({
+                group: {
+                    id: group.id
+                }
+            }))
+        )
+
+        for (const group of groups) {
+            group.icon =
+                groupsWithIcons.get(String(group.id)) || null
+        }
+
+        const mainGroupId =
+            configuredGroupIds[0]
+
+        const mainGroup =
+            groups.find(
+                group =>
+                    String(group.id) ===
+                    String(mainGroupId)
+            )
+
+        let allies = []
+
+        if (mainGroup) {
+            allies =
+                await getGroupAllies(mainGroup.id)
+
+            const allyIcons =
+                await getGroupIcons(
+                    allies.map(group => ({
+                        group: {
+                            id: group.id
+                        }
+                    }))
+                )
+
+            for (const ally of allies) {
+                ally.icon =
+                    allyIcons.get(
+                        String(ally.id)
+                    ) || null
             }
         }
 
@@ -1312,16 +1460,18 @@ app.get("/api/profile", async (req, res) => {
                 id: userData.id,
                 username: userData.name,
                 displayName: userData.displayName,
-                avatar: req.session.roblox.avatar || null
+                avatar:
+                    req.session.roblox.avatar || null
             },
 
-            foundation,
+            mainGroup: mainGroup || null,
 
             groups,
 
             allies,
 
-            discord: account?.discord || null
+            discord:
+                account?.discord || null
         })
 
     } catch (error) {
