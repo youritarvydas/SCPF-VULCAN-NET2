@@ -175,7 +175,7 @@ async function getGroupIcons(groups) {
 async function getGroupAllies(groupId) {
     try {
         const response = await robloxRequest(
-            `https://groups.roblox.com/v1/groups/${groupId}/relationships/allies?maxRows=100`
+            `https://groups.roblox.com/v1/groups/${groupId}/relationships/allies?model.startRowIndex=0&model.maxRows=100`
         )
 
         return (response.relatedGroups || []).map(group => ({
