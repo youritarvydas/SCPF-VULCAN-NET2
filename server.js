@@ -1362,6 +1362,19 @@ app.get("/api/profile", async (req, res) => {
 			},
 
 			mainGroup: mainGroup || null,
+
+			foundation: mainGroup
+				? {
+					member: mainGroup.member,
+					group: {
+						id: mainGroup.id,
+						name: mainGroup.name,
+						icon: mainGroup.icon
+					},
+					role: mainGroup.role
+				}
+				: { member: false, group: null, role: null },
+
 			groups,
 			allies,
 			discord: account?.discord || null
