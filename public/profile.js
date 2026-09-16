@@ -1,363 +1,366 @@
-document.addEventListener("DOMContentLoaded", loadProfile)
+"use strict";
 
-async function loadProfile() {
-    try {
-        const response = await fetch("/api/profile", {
+document.addEventListener("DOMContentLoaded", async function () {
+
+```
+const warning = document.getElementById("warning");
+
+const profileAvatar =
+    document.getElementById("profileAvatar");
+
+const topAvatar =
+    document.getElementById("topAvatar");
+
+const profileUsername =
+    document.getElementById("profileUsername");
+
+const profileDisplayName =
+    document.getElementById("profileDisplayName");
+
+const profileUserId =
+    document.getElementById("profileUserId");
+
+const topUsername =
+    document.getElementById("topUsername");
+
+const topRank =
+    document.getElementById("topRank");
+
+const accountUsername =
+    document.getElementById("accountUsername");
+
+const accountDisplayName =
+    document.getElementById("accountDisplayName");
+
+const accountUserId =
+    document.getElementById("accountUserId");
+
+const foundationName =
+    document.getElementById("foundationName");
+
+const foundationId =
+    document.getElementById("foundationId");
+
+const foundationIcon =
+    document.getElementById("foundationIcon");
+
+const foundationRank =
+    document.getElementById("foundationRank");
+
+const foundationRoleId =
+    document.getElementById("foundationRoleId");
+
+const foundationMember =
+    document.getElementById("foundationMember");
+
+const foundationStatus =
+    document.getElementById("foundationStatus");
+
+const groupsList =
+    document.getElementById("groupsList");
+
+const alliesList =
+    document.getElementById("alliesList");
+
+const groupCount =
+    document.getElementById("groupCount");
+
+const allyCount =
+    document.getElementById("allyCount");
+
+const logoutButton =
+    document.getElementById("logoutButton");
+
+
+try {
+
+    const response =
+        await fetch("/api/profile", {
             credentials: "include"
-        })
-
-        const data = await response.json()
-
-        if (!response.ok) {
-            throw new Error(data.error || "Failed to load profile")
-        }
-
-        renderProfile(data)
-
-    } catch (error) {
-        console.error("Profile loading failed:", error)
-
-        document.querySelector(".Content").innerHTML = `
-            <div class="Panel">
-                <div class="ProfileError">
-                    Unable to load personnel profile.
-                    <br>
-                    <small>${escapeHtml(error.message)}</small>
-                </div>
-            </div>
-        `
-    }
-}
+        });
 
 
-function renderProfile(data) {
+    if (!response.ok) {
 
-    const user = data.user
-    const mainGroup = data.mainGroup
-    const discord = data.discord
-    const warnings = data.warnings || []
+        throw new Error(
+            "Failed to load profile."
+        );
 
-    setText("profileUsername", user.username)
-    setText("infoUsername", user.username)
-
-    setText("infoRobloxId", user.id)
-    setText("robloxUsername", user.username)
-    setText("robloxId", `ID: ${user.id}`)
-
-    setText(
-        "profileRank",
-        mainGroup ? mainGroup.role.name : "No Foundation rank"
-    )
-
-    setText(
-        "infoRank",
-        mainGroup ? mainGroup.role.name : "Not a member"
-    )
-
-    setText(
-        "infoRankId",
-        mainGroup ? mainGroup.role.rank : "—"
-    )
-
-    if (data.clearance) {
-        setText("profileClearance", data.clearance)
-        setText("infoClearance", data.clearance)
-    }
-
-    if (data.lastLogin) {
-        setText(
-            "lastLogin",
-            formatDate(data.lastLogin)
-        )
     }
 
 
-    setAvatar(
-        "profileAvatar",
-        user.avatar
-    )
-
-    setAvatar(
-        "headerAvatar",
-        user.avatar
-    )
-
-    setAvatar(
-        "robloxAvatar",
-        user.avatar
-    )
+    const data =
+        await response.json();
 
 
-    setText(
-        "headerUsername",
-        user.username
-    )
+    if (!data.success) {
 
-    setText(
-        "headerRank",
-        mainGroup
-            ? mainGroup.role.name
-            : "Foundation Personnel"
-    )
+        throw new Error(
+            data.error || "Failed to load profile."
+        );
+
+    }
 
 
-    if (discord) {
+    const user =
+        data.user;
 
-        setText(
-            "discordUsername",
-            discord.username || "Linked"
-        )
+    const foundation =
+        data.foundation;
 
-        setText(
-            "discordId",
-            discord.id
-                ? `ID: ${discord.id}`
-                : "Discord account linked"
-        )
+    const groups =
+        data.groups || [];
 
-        if (discord.avatar) {
-            setAvatar(
-                "discordAvatar",
-                discord.avatar
-            )
-        }
+    const allies =
+        data.allies || [];
+
+
+    /* USER */
+
+    profileAvatar.src =
+        user.avatar || "";
+
+    topAvatar.src =
+        user.avatar || "";
+
+    profileUsername.textContent =
+        user.username || "Unknown";
+
+    profileDisplayName.textContent =
+        user.displayName || user.username || "Unknown";
+
+    profileUserId.textContent =
+        user.id;
+
+    topUsername.textContent =
+        user.username || "Unknown";
+
+    topRank.textContent =
+        foundation?.role?.name ||
+        "No Foundation Rank";
+
+    accountUsername.textContent =
+        user.username || "Unknown";
+
+    accountDisplayName.textContent =
+        user.displayName || "Unknown";
+
+    accountUserId.textContent =
+        user.id;
+
+
+    /* FOUNDATION */
+
+    if (foundation && foundation.member) {
+
+        foundationName.textContent =
+            foundation.group.name;
+
+        foundationId.textContent =
+            foundation.group.id;
+
+        foundationIcon.src =
+            foundation.group.icon;
+
+        foundationRank.textContent =
+            foundation.role.name;
+
+        foundationRoleId.textContent =
+            foundation.role.id;
+
+        foundationMember.textContent =
+            "YES";
+
+        foundationStatus.textContent =
+            "MEMBER";
+
+        foundationStatus.classList.remove(
+            "not-member"
+        );
 
     } else {
 
-        setText(
-            "discordUsername",
-            "Not linked"
-        )
+        foundationName.textContent =
+            "SCPF Foundation";
 
-        setText(
-            "discordId",
-            "No Discord account linked"
-        )
+        foundationRank.textContent =
+            "Not a member";
+
+        foundationRoleId.textContent =
+            "-";
+
+        foundationMember.textContent =
+            "NO";
+
+        foundationStatus.textContent =
+            "NOT MEMBER";
+
+        foundationStatus.classList.add(
+            "not-member"
+        );
+
+        warning.classList.remove(
+            "hidden"
+        );
 
     }
 
 
-    renderGroups(
-        data.groups || [],
-        mainGroup
-    )
+    /* GROUPS */
 
-    renderWarnings(warnings)
-}
+    groupCount.textContent =
+        `${groups.length} GROUP${groups.length === 1 ? "" : "S"}`;
 
 
-function renderGroups(groups, mainGroup) {
-
-    const container =
-        document.getElementById("groupsContainer")
-
-    if (!groups.length) {
-
-        container.innerHTML = `
-            <div class="EmptyRecord">
-                <strong>No group memberships found</strong>
-                This Roblox account is not currently a member of any groups.
-            </div>
-        `
-
-        return
-    }
+    groupsList.innerHTML = "";
 
 
-    container.innerHTML = groups
-        .map(group => {
+    if (groups.length === 0) {
 
-            const isMain =
-                mainGroup &&
-                String(group.group.id) ===
-                String(mainGroup.group.id)
+        groupsList.innerHTML =
+            `<div class="empty">
+                This user is not currently in any groups.
+            </div>`;
 
-            return `
-                <div class="GroupCard ${isMain ? "mainGroup" : ""}">
+    } else {
 
-                    <div class="GroupIcon">
+        groups.forEach(function (group) {
 
-                        ${
-                            group.group.icon
-                                ? `<img src="${escapeAttribute(group.group.icon)}" alt="">`
-                                : `<span>G</span>`
-                        }
+            const entry =
+                document.createElement("div");
 
-                    </div>
+            entry.className =
+                "group-entry";
 
 
-                    <div class="GroupInformation">
+            entry.innerHTML = `
+                <img
+                    src="${escapeHTML(group.icon)}"
+                    alt=""
+                >
 
-                        <strong>
-                            ${escapeHtml(group.group.name)}
-                        </strong>
+                <div class="group-entry-content">
 
-                        <small>
-                            Group ID: ${escapeHtml(String(group.group.id))}
-                        </small>
+                    <strong>
+                        ${escapeHTML(group.name)}
+                    </strong>
 
-                        ${
-                            isMain
-                                ? `<span class="MainGroupBadge">MAIN FOUNDATION GROUP</span>`
-                                : ""
-                        }
-
-                    </div>
-
-
-                    <div class="GroupRole">
-
-                        <span>ROLE</span>
-
-                        <strong>
-                            ${escapeHtml(group.role.name)}
-                        </strong>
-
-                    </div>
-
-
-                    <div class="GroupRank">
-
-                        <span>RANK ID</span>
-
-                        <strong>
-                            ${escapeHtml(String(group.role.rank))}
-                        </strong>
-
-                    </div>
+                    <span>
+                        ${escapeHTML(group.role)}
+                        · Group ID ${escapeHTML(String(group.id))}
+                    </span>
 
                 </div>
-            `
-        })
-        .join("")
-}
+            `;
 
 
-function renderWarnings(warnings) {
+            groupsList.appendChild(entry);
 
-    const container =
-        document.getElementById("warningsContainer")
+        });
 
-    if (!warnings.length) {
-
-        container.innerHTML = `
-            <div class="EmptyRecord">
-                <strong>No active warnings</strong>
-                No disciplinary records are currently associated with this personnel account.
-            </div>
-        `
-
-        return
     }
 
 
-    container.innerHTML = warnings
-        .map(warning => {
+    /* ALLIES */
 
-            return `
-                <div class="WarningCard">
+    allyCount.textContent =
+        `${allies.length} ALL${allies.length === 1 ? "Y" : "IES"}`;
 
-                    <div class="WarningIcon">
-                        !
-                    </div>
+    alliesList.innerHTML = "";
 
 
-                    <div class="WarningInformation">
+    if (allies.length === 0) {
 
-                        <strong>
-                            ${escapeHtml(warning.title || "Personnel Warning")}
-                        </strong>
+        alliesList.innerHTML =
+            `<div class="empty">
+                No allied groups found.
+            </div>`;
 
-                        <p>
-                            ${escapeHtml(warning.reason || "No reason provided.")}
-                        </p>
+    } else {
 
-                    </div>
+        allies.forEach(function (ally) {
+
+            const entry =
+                document.createElement("div");
+
+            entry.className =
+                "group-entry";
 
 
-                    <div class="WarningMeta">
+            entry.innerHTML = `
+                <img
+                    src="${escapeHTML(ally.icon)}"
+                    alt=""
+                >
 
-                        <span>
-                            ${escapeHtml(warning.issued_by || "Unknown")}
-                        </span>
+                <div class="group-entry-content">
 
-                        <strong>
-                            ${formatDate(warning.issued_at)}
-                        </strong>
+                    <strong>
+                        ${escapeHTML(ally.name)}
+                    </strong>
 
-                    </div>
+                    <span>
+                        Allied Group · ID ${escapeHTML(String(ally.id))}
+                    </span>
 
                 </div>
-            `
-        })
-        .join("")
+            `;
+
+
+            alliesList.appendChild(entry);
+
+        });
+
+    }
+
+} catch (error) {
+
+    console.error(
+        "[SCPF Profile]",
+        error
+    );
+
+
+    groupsList.innerHTML =
+        `<div class="empty error">
+            Failed to load Roblox profile information.
+        </div>`;
+
+
+    alliesList.innerHTML =
+        `<div class="empty error">
+            Failed to load allied groups.
+        </div>`;
+
 }
 
 
-function setText(id, value) {
+if (logoutButton) {
 
-    const element = document.getElementById(id)
+    logoutButton.addEventListener(
+        "click",
+        function () {
 
-    if (element) {
-        element.textContent = value ?? "—"
-    }
-}
+            window.location.href =
+                "/logout";
 
-
-function setAvatar(id, url) {
-
-    const element =
-        document.getElementById(id)
-
-    if (!element || !url) {
-        return
-    }
-
-    element.innerHTML = ""
-
-    const image =
-        document.createElement("img")
-
-    image.src = url
-    image.alt = ""
-
-    element.appendChild(image)
-}
-
-
-function formatDate(value) {
-
-    if (!value) {
-        return "—"
-    }
-
-    const date = new Date(value)
-
-    if (Number.isNaN(date.getTime())) {
-        return value
-    }
-
-    return date.toLocaleString(
-        undefined,
-        {
-            dateStyle: "medium",
-            timeStyle: "short"
         }
-    )
+    );
+
 }
+```
 
+});
 
-function escapeHtml(value) {
+function escapeHTML(value) {
 
-    return String(value ?? "")
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;")
-}
+```
+return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+```
 
-
-function escapeAttribute(value) {
-    return escapeHtml(value)
 }
