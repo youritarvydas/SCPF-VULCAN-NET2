@@ -172,6 +172,28 @@ async function getGroupIcons(groups) {
     }
 }
 
+async function getGroupAllies(groupId) {
+    try {
+        const response = await robloxRequest(
+            `https://groups.roblox.com/v1/groups/${groupId}/relationships/allies?maxRows=100`
+        )
+
+        return (response.relatedGroups || []).map(group => ({
+            id: group.id,
+            name: group.name,
+            description: group.description || "",
+            memberCount: group.memberCount || 0,
+            icon: null
+        }))
+    } catch (error) {
+        console.error(
+            `[PROFILE] Failed to retrieve allies for group ${groupId}:`,
+            error
+        )
+
+        return []
+    }
+}
 
 
 app.use(discordConnect)
@@ -1179,112 +1201,142 @@ app.get(
 		}
 	}
 )
+
+
 app.get("/api/profile", async (req, res) => {
-	try {
-		if (!req.session.roblox) {
-			return res.status(401).json({
-				error: "No Roblox account linked to this session"
-			})
-		}
+    try {
+        if (!req.session.roblox) {
+            return res.status(401).json({
+                error: "No Roblox account linked to this session"
+            })
+        }
 
-		const robloxId = String(req.session.roblox.id)
+        const robloxId = String(req.session.roblox.id)
 
-		console.log("[PROFILE] Roblox user ID:", robloxId)
+        console.log("[PROFILE] Roblox user ID:", robloxId)
 
-		const [userResponse, groupsResponse] = await Promise.all([
-			fetch(`https://users.roblox.com/v1/users/${robloxId}`),
-			fetch(`https://groups.roblox.com/v1/users/${robloxId}/groups/roles`)
-		])
+        const FOUNDATION_GROUP_ID = "14825724"
 
-		const userData = await userResponse.json()
-		const groupsData = await groupsResponse.json()
+        const [
+            userResponse,
+            groupsResponse,
+            allies
+        ] = await Promise.all([
+            fetch(
+                `https://users.roblox.com/v1/users/${robloxId}`
+            ),
 
-		if (!userResponse.ok) {
-			console.error("[PROFILE] User API error:", userData)
+            fetch(
+                `https://groups.roblox.com/v1/users/${robloxId}/groups/roles`
+            ),
 
-			return res.status(userResponse.status).json({
-				error: "Failed to retrieve Roblox user.",
-				details: userData
-			})
-		}
+            getGroupAllies(FOUNDATION_GROUP_ID)
+        ])
 
-		if (!groupsResponse.ok) {
-			console.error("[PROFILE] Groups API error:", groupsData)
+        const userData = await userResponse.json()
+        const groupsData = await groupsResponse.json()
 
-			return res.status(groupsResponse.status).json({
-				error: "Failed to retrieve Roblox groups.",
-				details: groupsData
-			})
-		}
+        if (!userResponse.ok) {
+            console.error(
+                "[PROFILE] User API error:",
+                userData
+            )
 
-		const FOUNDATION_GROUP_ID = "14825724"
+            return res.status(userResponse.status).json({
+                error: "Failed to retrieve Roblox user.",
+                details: userData
+            })
+        }
 
-		const foundationGroup = groupsData.data.find(
-			entry =>
-				String(entry.group.id) === FOUNDATION_GROUP_ID
-		)
+        if (!groupsResponse.ok) {
+            console.error(
+                "[PROFILE] Groups API error:",
+                groupsData
+            )
 
-		const groups = groupsData.data.map(entry => ({
-			id: entry.group.id,
-			name: entry.group.name,
-			icon: null,
-			role: {
-				id: entry.role.id,
-				name: entry.role.name,
-				rank: entry.role.rank
-			}
-		}))
+            return res.status(groupsResponse.status).json({
+                error: "Failed to retrieve Roblox groups.",
+                details: groupsData
+            })
+        }
 
-		let foundation = {
-			member: false,
-			group: {
-				id: FOUNDATION_GROUP_ID,
-				name: "SCPF Foundation",
-				icon: null
-			},
-			role: null
-		}
+        const foundationGroup =
+            groupsData.data.find(
+                entry =>
+                    String(entry.group.id) ===
+                    FOUNDATION_GROUP_ID
+            )
 
-		if (foundationGroup) {
-			foundation.member = true
+        const groups =
+            groupsData.data.map(entry => ({
+                id: entry.group.id,
+                name: entry.group.name,
+                icon: null,
 
-			foundation.role = {
-				id: foundationGroup.role.id,
-				name: foundationGroup.role.name,
-				rank: foundationGroup.role.rank
-			}
-		}
+                role: {
+                    id: entry.role.id,
+                    name: entry.role.name,
+                    rank: entry.role.rank
+                }
+            }))
 
-		const account = await getLinkByRobloxId(robloxId)
+        let foundation = {
+            member: false,
 
-		res.json({
-			success: true,
+            group: {
+                id: FOUNDATION_GROUP_ID,
+                name: "SCPF Foundation",
+                icon: null
+            },
 
-			user: {
-				id: userData.id,
-				username: userData.name,
-				displayName: userData.displayName,
-				avatar: req.session.roblox.avatar || null
-			},
+            role: null
+        }
 
-			foundation,
+        if (foundationGroup) {
+            foundation.member = true
 
-			groups,
+            foundation.role = {
+                id: foundationGroup.role.id,
+                name: foundationGroup.role.name,
+                rank: foundationGroup.role.rank
+            }
+        }
 
-			allies: [],
+        const account =
+            await getLinkByRobloxId(robloxId)
 
-			discord: account?.discord || null
-		})
+        res.json({
+            success: true,
 
-	} catch (error) {
-		console.error("[PROFILE] Error:", error)
+            user: {
+                id: userData.id,
+                username: userData.name,
+                displayName: userData.displayName,
+                avatar: req.session.roblox.avatar || null
+            },
 
-		res.status(500).json({
-			error: "Failed to load profile.",
-			details: error.message
-		})
-	}
+            foundation,
+
+            groups,
+
+            allies,
+
+            discord: account?.discord || null
+        })
+
+    } catch (error) {
+        console.error(
+            "[PROFILE] Error:",
+            error
+        )
+
+        res.status(500).json({
+            error: "Failed to load profile.",
+            details: error.message
+        })
+    }
 })
+
 
 
 app.listen(PORT, () => {
