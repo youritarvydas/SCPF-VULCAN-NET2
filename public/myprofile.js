@@ -2,7 +2,7 @@
 
 document.addEventListener("DOMContentLoaded", async function () {
 
-```
+
 const warning = document.getElementById("warning");
 
 const profileAvatar =
@@ -348,19 +348,19 @@ if (logoutButton) {
     );
 
 }
-```
+
 
 });
 
 function escapeHTML(value) {
 
-```
+
 return String(value)
     .replaceAll("&", "&amp;")
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
-```
+
 
 }
